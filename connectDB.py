@@ -5,6 +5,7 @@ from dotenv import dotenv_values
 def config(path):
     config = dotenv_values(path + ".env")
     db_settings = {
+        "pool_reset_session": True,
         "host": config["DBHOST"],
         "port": config["DBPORT"],
         "user": config["DBUSER"],
