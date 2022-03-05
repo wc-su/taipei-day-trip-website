@@ -11,7 +11,7 @@ api = Blueprint(
 )
 
 dataCount = 12 # 每一頁資料筆數
-conn = connectDB.connect("", "pool_name", 5)
+conn_pool = connectDB.connect("", "mypool", 5)
 
 @api.route("/attractions")
 def attractions():
@@ -19,7 +19,7 @@ def attractions():
 	response = { "error": True, "message": "系統錯誤" }
 
 	# 檢查連線
-	if not conn:
+	if not conn_pool:
 		response["message"] = "資料庫連線失敗"
 		return response, 500
 
@@ -49,7 +49,7 @@ def attractions():
 	# 多取 1 筆，判斷是否有下一頁
 	query_command_list.append("LIMIT %(index)s, %(dataCount)s;")
 	result = connectDB.query(
-		conn,
+		conn_pool,
 		" ".join(query_command_list),
 		{ "keyword": keyword, "index": startIndex, "dataCount": dataCount + 1 },
 		"all", 0
@@ -95,7 +95,7 @@ def attraction(id):
 	response = { "error": True, "message": "系統錯誤" }
 	
 	# 檢查連線
-	if not conn:
+	if not conn_pool:
 		response["message"] = "資料庫連線失敗"
 		return response, 500
 	
@@ -113,7 +113,7 @@ def attraction(id):
 		WHERE attraction.id = %(id)s
 		GROUP BY attraction.id;
 	"""
-	result = connectDB.query(conn, query_command, { "id":id }, "one", 0)
+	result = connectDB.query(conn_pool, query_command, { "id":id }, "one", 0)
 	# 查詢錯誤，回傳失敗訊息
 	if result["status"] == "err":
 		response["message"] = "資料庫查詢失敗"
