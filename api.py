@@ -30,6 +30,9 @@ def attractions():
 	if not re.match("[-+]?\d+$", page):
 		response["message"] = "page 格式錯誤"
 		return response, 400
+	if int(page) < 0:
+		response["message"] = "page 需大於 0"
+		return response, 400
 
 	# 計算起始索引
 	startIndex = int(page) * dataCount
@@ -44,7 +47,6 @@ def attractions():
 	""")
 	if keyword:
 		query_command_list.append("WHERE attraction.name REGEXP %(keyword)s")
-	# 多取1筆，若有13筆則表示有下一頁
 	query_command_list.append("GROUP BY attraction.id")
 	# 多取 1 筆，判斷是否有下一頁
 	query_command_list.append("LIMIT %(index)s, %(dataCount)s;")
