@@ -6,3 +6,7 @@ ul {
     list-style: none;
     padding: 0;
 }
+
+input {
+    -webkit-appearance: none;    
+}
