@@ -7,7 +7,9 @@ ul {
     padding: 0;
 }
 
-input {
+textarea, input[type="button"], input[type="submit"], input[type="reset"], input[type="search"] {
     -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     border-radius: 0;
 }
