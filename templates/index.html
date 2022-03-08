@@ -5,37 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>台北一日遊</title>
-    <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/index.css">
 </head>
 <body>
     <div class="nav">
-        <div class="nav__wrap">
-            <h1 class="nav__header"><a href="index.html">台北一日遊</a></h1>
-            <ul class="nav__menu">
-                <li><a class="nav__item">預定行程</a></li>
-                <li><a class="nav__item">登入/註冊</a></li>
+        <div class="nav__container">
+            <h1 class="logo"><a href="/">台北一日遊</a></h1>
+            <ul class="menu">
+                <li class="menu__item"><a href="/">預定行程</a></li>  
+                <li class="menu__item"><a href="/">登入/註冊</a></li> 
             </ul>
         </div>
     </div>
-    <div class="section">
-        <div class="section__wrap">
-            <h2 class="section__title">輕鬆享受台北一日悠閒</h2>
-            <p class="section__description">探索每個角落，體驗城市的深度旅遊行程</p>
-            <div class="section__search-wrap">
-                <input class="section__search-text" type="text" name="" id="" placeholder="輸入景點名稱查詢">
-                <!-- <a class="section__search-btn"></a> -->
-                <input class="section__search-btn" type="button" value="">
+    <div class="header">
+        <div class="header__container">
+            <div class="header__slogan">
+                <p>輕鬆享受台北一日悠閒</p>
+                <p>探索每個角落，體驗城市的深度旅遊行程</p>
+            </div>
+            <div class="search-container">
+                <input class="search-text" type="search" name="" placeholder="輸入景點名稱查詢">
+                <input class="search-btn" type="button" value="">
             </div>
         </div>
     </div>
     <div class="main">
-        <ul class="attractions">
-        </ul>
+        <ul class="attractions"></ul>
         <div class="attractions-observer"></div>
     </div>
     <div class="footer">
-        <p class="footer__copyright">COPYRIGHT © 2021 台北一日遊</p>
+        <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
     </div>
     <script src="/static/js/index.js"></script>
 </body>

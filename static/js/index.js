@@ -1,15 +1,16 @@
-// 目前頁數，預設是 0
-let nowPage = 0;
-// 下一頁頁數，預設是 0，表示未載入資訊
-let nextPage = 0;
-
-let dataLoading = false;
-let hasSearchText = false;
-const main = document.querySelector(".main");
-const main__attractions = document.querySelector(".attractions");
+// 頁數
+let nowPage = 0; // 目前頁數，預設是 0
+let nextPage = 0; // 下一頁頁數，預設是 0，表示未載入資訊
+// 註記
+let dataLoading = false; // 資料是否正在讀取，預設為 false
+let hasSearchText = false; // 是否有輸入關鍵字，預設為 false
+let typeChinese = false; // 是否正在輸入中文，預設為 false
+// 旅遊景點
+const attractions = document.querySelector(".attractions");
 const attractions_observer = document.querySelector(".attractions-observer");
-const searchText = document.querySelector(".section__search-text");
-const searchBtn = document.querySelector(".section__search-btn");
+// 搜尋事件
+const searchText = document.querySelector(".search-text");
+const searchBtn = document.querySelector(".search-btn");
 
 // 條件達成做什麼：符合設定條件下，目標進入或離開 viewport 時觸發此 callback 函式
 const observerCallback = ([entry]) => {
@@ -17,33 +18,30 @@ const observerCallback = ([entry]) => {
         checkInput(nextPage);
     }
 };
-
 // 建立一個 intersection observer，帶入相關設定資訊
 // 觸發條件都使用預設即可，所以不特別帶入(第二個參數)
-let observer = new IntersectionObserver(observerCallback);
+const observer = new IntersectionObserver(observerCallback);
 
 
 function checkInput() {
-    // 待測試，決定需不需要留下 -> 註解先保留，margin 到 main 前要記得刪掉
+    // 資料載入中，不做任何處理
     if(dataLoading) {
-        // console.log("data load still");
         return;
     }
-    if(nextPage != null) {    
+    if(nextPage != null) {
         let url = `/api/attractions?page=${nextPage}`;
-        // 使用 search botton，帶入輸入關鍵字搜尋
+        // 帶入輸入關鍵字搜尋
         if(hasSearchText && searchText.value.trim() != "") {
             url += `&keyword=${searchText.value.trim()}`;
         }
-        dataLoading = true;
-        // console.log("data load start");
         getAttractions(url);
     }
 }
 
 // 取得旅遊景點資訊，帶入參數：page
 function getAttractions(url) {
-    // console.log("fetch start");
+    // 讀取註記設為 true
+    dataLoading = true;
     fetch(url)
     .then((response) => {
         return response.json()
@@ -62,12 +60,11 @@ function getAttractions(url) {
         nextPage = data.nextPage;
         // 資料讀取結束
         dataLoading = false;
-        // console.log("fetch end, data load end");
     });
 }
 
-function renderAttractions(attractions) {
-    attractions.forEach(attraction => {
+function renderAttractions(attractionsData) {
+    attractionsData.forEach(attraction => {
         // 新增旅遊景點區塊
         const attractionWrap = document.createElement("li");
         attractionWrap.classList.add("attraction-wrap");
@@ -94,7 +91,7 @@ function renderAttractions(attractions) {
         attractionWrap.appendChild(attractionMrt);
         attractionWrap.appendChild(attractionCategory);
         // 景點區塊加入畫面
-        main__attractions.appendChild(attractionWrap);
+        attractions.appendChild(attractionWrap);
     });
 }
 
@@ -106,14 +103,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 關鍵字搜尋事件
 searchBtn.addEventListener("click", (e) => {
-    // 初始化變數、
+    // 初始化
     nowPage = 0;
     nextPage = 0;
     dataLoading = false;
-    main__attractions.innerHTML = "";
+    attractions.innerHTML = "";
     attractions_observer.style.display = "block";
     // 設定
     hasSearchText = true;
     observer.observe(attractions_observer);
 });
 
+// 查詢功能優化
+searchText.addEventListener("keyup", (e) => {
+    if (!typeChinese && e.keyCode === 13) {
+        console.log("click search btn");
+        searchBtn.click();
+    }
+});
+searchText.addEventListener("keydown", (e) => {
+    // 開始輸入中文
+    if (!typeChinese && e.keyCode === 229) {
+        typeChinese = true;
+        console.log("input chinese start", typeChinese);
+    }
+    // 結束輸入中文
+    if (typeChinese && e.keyCode === 13) {
+        typeChinese = false;
+        console.log("input chinese end", typeChinese);
+    }
+});
