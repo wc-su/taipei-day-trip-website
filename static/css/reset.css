@@ -1,10 +1,11 @@
 h1, p, ul {
     margin: 0;
 }
-
+h1, ul {
+    padding: 0;
+}
 ul {
     list-style: none;
-    padding: 0;
 }
 
 textarea, input[type="button"], input[type="submit"], input[type="reset"], input[type="search"] {
@@ -12,4 +13,8 @@ textarea, input[type="button"], input[type="submit"], input[type="reset"], input
     -moz-appearance: none;
     appearance: none;
     border-radius: 0;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
 }
