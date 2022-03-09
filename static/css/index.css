@@ -1,0 +1,216 @@
+/* import font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+/* initial css */
+@import "normalize.css";
+@import "reset.css";
+
+body {
+    background: #EFF3F5;
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1;
+    /* footer 放置在畫面底部 */
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+}
+
+.nav {
+    width: 100%;
+    background: #FFFFFF;
+    /* 固定在畫面上方 */
+    position: fixed; top: 0; left: 0;
+    /* 置於最上層 */
+    z-index: 50;
+}
+.nav__container {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.logo > a {
+    display: block;
+    text-decoration: none;
+    font-size: 30px;
+    color: #448899;
+    font-weight: 700;
+    padding: 12px 0;
+}
+.menu {
+    display: flex;
+}
+.menu__item > a {
+    display: block;
+    color: #666666;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.header {
+    background: linear-gradient(135deg, #AADDEE 0%, #66AABB 100%);
+    height: 0; padding-bottom: 320px;
+    overflow: hidden;
+    margin-top: 54px;
+}
+.header__container {
+    max-width: 1200px;
+    position: relative;
+    z-index: 2;
+    padding: 85px 0 91px 0;
+    margin: 0 auto;
+}
+.header__container::before {
+    content: "";
+    background: url("../img/welcome\ 1.png") no-repeat bottom right;
+    background-size: contain;
+    width: 100%; height: 100%;
+    position: absolute; bottom: 0; right: -10%;
+    z-index: -1;
+}
+.header__slogan {
+    color: #F8F8F8;
+}
+.header__slogan > p:first-child {
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: 0 0 3px #AABBCC;
+    margin-bottom: 24px;
+}
+.search-container {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    justify-content: start;
+    width: 40%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 28px;
+}
+.search-container__text {
+    border: none; outline: none;
+    min-width: 200px;
+    padding: 15px;
+}
+.search-container__text::placeholder {
+    color: #757575;
+    font-weight: 700;
+}
+.search-container__btn {
+    background: url("../img/icon_search.png") no-repeat center center, #448899;
+    width: 100%; height: 100%;
+    border: none; box-shadow: none;
+    cursor: pointer;
+    padding: 8px 15px;
+}
+
+.main {
+    max-width: 1200px;
+    width: 100%;
+    padding: 55px 10px;
+    margin: 0 auto;
+}
+.attractions {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(4, 1fr);
+}
+.attractions.attractions--nodata {
+    grid-template-columns: 1fr;
+}
+.attraction-wrap {
+    display: grid;
+    grid-template-areas: 
+        "img img"
+        "title title"
+        "mrt category";
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8; border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.attraction-img {
+    grid-area: img;
+    display: block;
+    width: 100%; padding-bottom: 60%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.attraction-title, .attraction-mrt, .attraction-category, .attraction-msg {
+    color: #757575;
+    padding: 12px 10px;
+}
+.attraction-msg {
+    font-weight: 700;
+    text-align: center;
+} 
+.attraction-title {
+    grid-area: title;
+    font-weight: 700;
+}
+.attraction-mrt {
+    grid-area: mrt;
+}
+.attraction-category {
+    grid-area: category;
+    justify-self: end;
+}
+.attractions__observer {
+    border: 6px solid #f3f3f3; border-top: 5px solid #448899;
+    border-radius: 50%;
+    width: 30px; height: 30px;
+    margin: 55px auto;
+}
+.attractions__observer--animation {
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.footer {
+    background :#757575;
+    width: 100%;
+    /* footer 放置在畫面底部 */
+    margin-top: auto;
+}
+.copyright {
+    color: #FFFFFF;
+    text-align: center;
+    padding: 44px 0;
+}
+
+@media (max-width: 1200px) {
+    .logo > a {
+        padding: 12px 0 12px 20px;
+    }
+    .header__container {
+        padding: 85px 0 91px 20px;
+    }
+    .header__container::before {
+        height: 80%;
+        right: -15%;
+    }
+    .search-container {
+        width: 60%;
+    }
+    .main {
+        padding: 55px 20px;
+    }
+    .attractions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* mobile */
+@media (max-width: 576px) {
+    .header__container::before {
+        height: 60%;
+        right: -20%;
+    }
+    .search-container {
+        width: 85%;
+    }
+    .attractions {
+        grid-template-columns: 1fr;
+    }
+}
