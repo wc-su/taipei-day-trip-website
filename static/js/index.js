@@ -61,7 +61,7 @@ function renderAttractions(renderData) {
         msg = renderData.message;
     } else if(attractionsData.length == 0) {
         // 無資料
-        msg = "查無旅遊景資訊";
+        msg = "查無旅遊景點資訊";
     }
 
     // 顯示在畫面上
