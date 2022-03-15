@@ -84,18 +84,16 @@ def query(conn_pool, command, data, mode, size, multi_command=False):
         results = cursor.execute(command, data, multi=multi_command)
         
         for cur in results:
-            # pass
             if cur.with_rows:
                 if mode == "one":
-                    result = cursor.fetchone()
+                    result = cur.fetchone()
                 elif mode == "many":
-                    result = cursor.fetchmany(size)
+                    result = cur.fetchmany(size)
                 else:
-                    result = cursor.fetchall()
+                    result = cur.fetchall()
+                count = cur.rowcount
             else:
                 pass
-        
-        count = cursor.rowcount
 
         reponse["status"] = "ok"
         reponse["data"] = result
