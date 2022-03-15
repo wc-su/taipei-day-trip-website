@@ -54,7 +54,7 @@ def attractions():
 		conn_pool,
 		" ".join(query_command_list),
 		{ "keyword": keyword, "index": startIndex, "dataCount": dataCount + 1 },
-		"all", 0
+		"all", 0, True
 	)
 	# 查詢錯誤，回傳失敗訊息
 	if result["status"] == "err":
@@ -107,15 +107,16 @@ def attraction(id):
 		return response, 400
 
 	query_command = """
-		SELECT
-			attraction.id AS id, name, category, description, address, transport, mrt, latitude, longitude,
-			GROUP_CONCAT(attraction_image.image) AS images
-		FROM attraction
-		LEFT JOIN attraction_image ON attraction_image.attraction_id = attraction.id
-		WHERE attraction.id = %(id)s
+		SET SESSION GROUP_CONCAT_MAX_LEN = 2500;
+		SELECT 
+			attraction.id AS id, name, category, description, address, transport, mrt, latitude, longitude, 
+			GROUP_CONCAT(attraction_image.image) AS images 
+		FROM attraction 
+		LEFT JOIN attraction_image ON attraction_image.attraction_id = attraction.id 
+		WHERE attraction.id = %(id)s 
 		GROUP BY attraction.id;
 	"""
-	result = connectDB.query(conn_pool, query_command, { "id":id }, "one", 0)
+	result = connectDB.query(conn_pool, query_command, { "id":id }, "one", 0, True)
 	# 查詢錯誤，回傳失敗訊息
 	if result["status"] == "err":
 		response["message"] = "資料庫查詢失敗"
