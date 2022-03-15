@@ -77,6 +77,7 @@ function renderAttractions(renderData) {
             // 新增旅遊景點區塊
             const attractionWrap = document.createElement("li");
             attractionWrap.classList.add("attraction-wrap");
+            attractionWrap.setAttribute("data-id", attraction.id);
             // 旅遊景點圖片
             const attractionImg = document.createElement("img");
             attractionImg.style.backgroundImage = `url(${attraction.images[0]}`;
@@ -151,5 +152,11 @@ searchText.addEventListener("keydown", (e) => {
     // 結束輸入中文
     if (typeChinese && e.keyCode === 13) {
         typeChinese = false;
+    }
+});
+attractions.addEventListener("click", (e) => {
+    if(e.target.nodeName != "UL") {
+        url = `/attraction/${e.target.parentElement.getAttribute("data-id")}`;
+        window.location.assign(url);
     }
 });

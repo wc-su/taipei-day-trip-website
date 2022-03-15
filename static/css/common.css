@@ -1,0 +1,68 @@
+/* import font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+/* initial css */
+@import "normalize.css";
+@import "reset.css";
+
+body {
+    /* background: #EFF3F5; */
+    background: #FFFFFF;
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1;
+    /* footer 放置在畫面底部 */
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+    color: #666666;
+}
+
+.nav {
+    width: 100%;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E8E8E8;
+    /* 固定在畫面上方 */
+    position: fixed; top: 0; left: 0;
+    /* 置於最上層 */
+    z-index: 50;
+}
+.nav__container {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.logo > a {
+    display: block;
+    text-decoration: none;
+    font-size: 30px;
+    color: #448899;
+    font-weight: 700;
+    padding: 12px 0;
+}
+.menu {
+    display: flex;
+}
+.menu__item > a {
+    display: block;
+    color: inherit;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.footer {
+    background :#757575;
+    width: 100%;
+    /* footer 放置在畫面底部 */
+    margin-top: auto;
+}
+.footer > .copyright {
+    color: #FFFFFF;
+    text-align: center;
+    padding: 44px 0;
+}
+
+@media (max-width: 1200px) {
+    .logo > a {
+        padding: 12px 0 12px 20px;
+    }
+}
