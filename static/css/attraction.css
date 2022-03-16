@@ -108,6 +108,13 @@
     display: grid; gap: 22px;
     padding: 18px 20px;
 }
+input[type="date"].tour__date {
+    border: none;
+    padding: 6px 10px;
+}
+input[type="date"].tour__date:focus {
+    outline: none;
+}
 .tour__form > .tour__radio-container > input[type="radio"] {
     -webkit-appearance: none;
     appearance: none;
