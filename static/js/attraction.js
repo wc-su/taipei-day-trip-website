@@ -1,5 +1,7 @@
 let attraction = null; // 景點資訊，
 let autoSlider = true; // 圖片自動播放註記，預設是 true
+let isDown = false;
+let startX = 0;
 const imageContainer = document.querySelector(".img-container");
 const images = document.querySelector(".attraction-imgs");
 const prevBtn = document.querySelector(".img__btn--prev");
@@ -77,6 +79,14 @@ tourSubmit.addEventListener("click", (e) => {
     // 先取消 submit 事件
     e.preventDefault();
 });
+// 景點圖片 滑鼠/手勢 事件
+images.addEventListener("mousedown", dragStart);
+images.addEventListener("touchstart", dragStart);
+images.addEventListener("mousemove", dragMove);
+images.addEventListener("touchmove", dragMove);
+images.addEventListener("mouseleave", dragInit);
+images.addEventListener("mouseup", dragEnd);
+images.addEventListener("touchend", dragEnd);
 
 
 function renderIndex(index) {
@@ -156,4 +166,29 @@ function renderInit() {
 
     // 畫面重新調整
     renderIndex(0);
+}
+
+function dragInit() {
+    isDown = false;
+    images.classList.remove("attraction-imgs--active");
+    startX = 0;
+}
+function dragStart(event) {
+    isDown = true;
+    images.classList.add("attraction-imgs--active");
+    startX = event.pageX;
+}
+function dragMove(event) {
+    event.preventDefault();
+    if(!isDown) { return; }
+}
+function dragEnd(event) {
+    if(!isDown) { return; }
+    let endX = event.pageX;
+    if(endX > startX && (endX - startX >= 50)) { // 上一張
+        prevBtn.click();
+    } else if(endX < startX && (startX - endX >= 50)) { // 下一張
+        nextBtn.click();
+    }
+    dragInit();
 }

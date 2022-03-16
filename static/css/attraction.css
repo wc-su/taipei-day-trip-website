@@ -23,6 +23,10 @@
 .attraction-imgs {
     width: 100%;
     height: 100%;
+    cursor: grab;
+}
+.attraction-imgs.attraction-imgs--active {
+    cursor: grabbing;
 }
 .attraction-imgs > .attraction-img {
     object-fit: cover;
