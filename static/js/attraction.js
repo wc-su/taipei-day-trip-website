@@ -1,6 +1,5 @@
 let attraction = null; // 景點資訊，
 let autoSlider = true; // 圖片自動播放註記，預設是 true
-let overCircles = false; // 判斷圖片圓點是否超出外容器，預設是 false
 const imageContainer = document.querySelector(".img-container");
 const images = document.querySelector(".attraction-imgs");
 const prevBtn = document.querySelector(".img__btn--prev");
@@ -78,29 +77,7 @@ tourSubmit.addEventListener("click", (e) => {
     // 先取消 submit 事件
     e.preventDefault();
 });
-// 視窗更動尺寸 事件
-window.addEventListener("resize", renderCircles);
 
-// 視窗更動尺寸，重新計算圖片圓點在畫面上的位置
-function renderCircles() {
-    overCircles = false;
-
-    const imagesLen = attraction.images.length;
-    const circlesWidth = 12 * imagesLen + 12 * (imagesLen - 1) + 20;
-
-    if(circlesWidth > imageContainer.offsetWidth) {
-        // 若圓點 width 超過外容器，將註記改為 true，並調整圖片圓點為向左靠齊
-        circles.classList.add("img__circles--start");
-        overCircles = true;
-    } else {
-        // 若圓點 width 未超過外容器，套用預設設定(置中擺放)，移除其他設定
-        circles.classList.remove("img__circles--start");
-    }
-    circles.classList.remove("img__circles--end");
-
-    // 畫面重新調整
-    renderIndex(0);
-}
 
 function renderIndex(index) {
     // 關閉自動翻頁
@@ -113,22 +90,6 @@ function renderIndex(index) {
     }
     circles.children[index].classList.add("img__circle--active");
 
-    // 判斷圖片圓點 width 是否超出外容器
-    if(overCircles) {
-        if(index < attraction.images.length / 2) {
-            // index 在 1/2 前，調整靠左對齊
-            if(!circles.classList.contains("img__circles--start")) {
-                circles.classList.remove("img__circles--end");
-                circles.classList.add("img__circles--start");
-            }
-        } else {
-            // index 在 1/2 之後，調整靠右對齊
-            if(!circles.classList.contains("img__circles--end")) {
-                circles.classList.remove("img__circles--start");
-                circles.classList.add("img__circles--end");
-            }
-        }
-    }
     // 調整圖片
     const imgActive = document.querySelector(".attraction-img--active");
     if(imgActive) {
@@ -193,6 +154,6 @@ function renderInit() {
         clearInterval(intervalID);
     }
 
-    // 計算圖片圓點在畫面上的位置
-    renderCircles();
+    // 畫面重新調整
+    renderIndex(0);
 }
