@@ -32,23 +32,26 @@
                 <form class="tour__form">
                     <p class="tour__title">訂購導覽行程</p>
                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
-                    <div>
+                    <div class="tour__form-layout">
                         <label class="tour__title">選擇日期：</label>
                         <input type="date" name="date" class="tour__date" id="date">
                     </div>
-                    <div class="tour__radio-container">
+                    <div class="tour__radio-container tour__form-layout">
                         <label class="tour__title">選擇時間：</label>
                         <input type="radio" id="half-day-1st" name="half-day" value="1" checked/>
                         <label for="half-day-1st">上半天</label>
                         <input type="radio" id="half-day-2nd" name="half-day" value="2"/>
                         <label for="half-day-2nd">下半天</label>
                     </div>
-                    <p class="tour__title">導覽費用：<span class="tour__price">新台幣 2000 元</span></p>
+                    <div class="tour__form-layout">
+                        <span class="tour__title">導覽費用：</span>
+                        <span class="tour__price">新台幣 2000 元</span>
+                    </div>
                     <input class="tour__submit" type="submit" value="開始預訂行程">
                 </form>
             </div>
         </div>
-        <div class="divider" style="border: 1px solid #E8E8E8;"></div>
+        <div class="demarcation" style="border: 1px solid #E8E8E8;"></div>
         <div class="article">
             <p class="attraction-description"></p>
             <div>

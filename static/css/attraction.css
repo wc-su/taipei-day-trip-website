@@ -108,6 +108,9 @@
     display: grid; gap: 22px;
     padding: 18px 20px;
 }
+.tour__form-layout > .tour__title {
+    margin-right: 5px;
+}
 input[type="date"].tour__date {
     border: none;
     padding: 6px 10px;
@@ -169,7 +172,7 @@ input[type="date"].tour__date:focus {
     .tour-container {
         margin: 0 10px;
     }
-    .divider {
+    .demarcation {
         margin: 0 10px;
     }
 }
