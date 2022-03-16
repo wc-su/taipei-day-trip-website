@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景點資訊 - 台北一日遊</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/attraction.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav__container">
+            <h1 class="logo"><a href="/">台北一日遊</a></h1>
+            <ul class="menu">
+                <li class="menu__item"><a href="/">預定行程</a></li>  
+                <li class="menu__item"><a href="/">登入/註冊</a></li> 
+            </ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="container">
+            <div class="img-container">
+                <div class="attraction-imgs"></div>
+                <img src="/static/img/btn_leftArrow.png" alt="left arrow" class="img__btn img__btn--prev">
+                <img src="/static/img/btn_rightArrow.png" alt="right arrow" class="img__btn img__btn--next">
+                <div class="img__circle-wrap">
+                    <div class="img__circles"></div>
+                </div>
+            </div>
+            <div class="tour-container">
+                <p class="attraction-name tour__title"></p>
+                <p class="attraction-category-mrt"></p>
+                <form class="tour__form">
+                    <p class="tour__title">訂購導覽行程</p>
+                    <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
+                    <div class="tour__form-layout">
+                        <label class="tour__title">選擇日期：</label>
+                        <input type="date" name="date" class="tour__date" id="date">
+                    </div>
+                    <div class="tour__radio-container tour__form-layout">
+                        <label class="tour__title">選擇時間：</label>
+                        <input type="radio" id="half-day-1st" name="half-day" value="1" checked/>
+                        <label for="half-day-1st">上半天</label>
+                        <input type="radio" id="half-day-2nd" name="half-day" value="2"/>
+                        <label for="half-day-2nd">下半天</label>
+                    </div>
+                    <div class="tour__form-layout">
+                        <span class="tour__title">導覽費用：</span>
+                        <span class="tour__price">新台幣 2000 元</span>
+                    </div>
+                    <input class="tour__submit" type="submit" value="開始預訂行程">
+                </form>
+            </div>
+        </div>
+        <div class="demarcation" style="border: 1px solid #E8E8E8;"></div>
+        <div class="article">
+            <p class="attraction-description"></p>
+            <div>
+                <p class="article__title">景點地址：</p>
+                <p class="attraction-address"></p>
+            </div>
+            <div>
+                <p class="article__title">交通方式：</p>
+                <p class="attraction-transport"></p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
+    </div>
+    <script src="/static/js/attraction.js"></script>
+</body>
+</html>

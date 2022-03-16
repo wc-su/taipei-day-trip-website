@@ -75,22 +75,25 @@ def insert(conn_pool, command, data):
 
     return reponse
 
-def query(conn_pool, command, data, mode, size):
+def query(conn_pool, command, data, mode, size, multi_command=False):
     reponse = { "status": "err", "count": 0, "data": None }
 
     try:
         conn_obj = conn_pool.get_connection()
         cursor = conn_obj.cursor()
-        cursor.execute(command, data)
-
-        if mode == "one":
-            result = cursor.fetchone()
-        elif mode == "many":
-            result = cursor.fetchmany(size)
-        else:
-            result = cursor.fetchall()
+        results = cursor.execute(command, data, multi=multi_command)
         
-        count = cursor.rowcount
+        for cur in results:
+            if cur.with_rows:
+                if mode == "one":
+                    result = cur.fetchone()
+                elif mode == "many":
+                    result = cur.fetchmany(size)
+                else:
+                    result = cur.fetchall()
+                count = cur.rowcount
+            else:
+                pass
 
         reponse["status"] = "ok"
         reponse["data"] = result
