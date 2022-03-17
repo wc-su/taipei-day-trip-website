@@ -122,12 +122,9 @@ function renderAttractions(renderData) {
     }
 }
 
-window.onbeforeunload = function(e) {
-    window.scrollTo(0, 0);
-};
 
 // 頁面初始
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     // 設定觀察對象：告訴 observer 要觀察哪個目標元素
     observer.observe(attractions_observer);
 });
@@ -163,10 +160,16 @@ searchText.addEventListener("keydown", (e) => {
     }
 });
 attractions.addEventListener("click", (e) => {
-    if(e.target.nodeName != "UL") {
-        let id = e.target.parentElement.getAttribute("data-id");
-        if(e.target.nodeName == "IMG") {
-            id = e.target.parentElement.parentElement.getAttribute("data-id");
+    const target = e.target;
+    if(target.nodeName != "UL") {
+        const targetParent = target.parentElement;
+        if(target.nodeName == "P" && targetParent.classList.contains("attractions--nodata")) {
+            // 無景點資料，不做處理
+            return;
+        }
+        let id = targetParent.getAttribute("data-id");
+        if(target.nodeName == "IMG") {
+            id = targetParent.parentElement.getAttribute("data-id");
         }
         window.location.assign(`attraction/${id}`);
     }

@@ -25,18 +25,11 @@ fetch(url)
     renderInit();
 });
 
-// let test = 0;
-// const intervalXX = window.setInterval(() => {
-//     test++;
-//     console.log(test);
-// }, 1000);
-
 // 每 5 秒檢核使用者是否有翻頁，使用者有手動翻頁，auto 註記會改為 false 
 // 若註記為 false，則不自動翻頁但將 auto 註記開啟；若註記為 true，則進行自動翻頁
 const intervalID = window.setInterval(() => {
     if(autoSlider) {
-        nextBtn.click();
-        // test = 0;
+        // nextBtn.click();
     }
     autoSlider = true;
 }, 5000);

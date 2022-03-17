@@ -31,14 +31,14 @@
 .attraction-imgs > .attraction-img {
     object-fit: cover;
     object-position: center;
-    height: 100%;
+    height: inherit;
     opacity: 0.5;
     width: 0;
     transition: all 0.4s ease-in-out;
 }
 .attraction-imgs > .attraction-img.attraction-img--active {
     opacity: 1;
-    width: 100%;
+    width: inherit;
 }
 .img__btn--prev, .img__btn--next, .img__circle-wrap {
     position: absolute;
