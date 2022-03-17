@@ -10,7 +10,7 @@ const circles = document.querySelector(".img__circles");
 const radio = document.querySelector(".tour__radio-container");
 const tourSubmit = document.querySelector(".tour__submit");
 
-let url = `/api/${window.location.pathname}`;
+let url = `/api${window.location.pathname}`;
 fetch(url)
 .then((response) => {
     return response.json();

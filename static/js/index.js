@@ -122,6 +122,10 @@ function renderAttractions(renderData) {
     }
 }
 
+window.onbeforeunload = function(e) {
+    window.scrollTo(0, 0);
+};
+
 // 頁面初始
 document.addEventListener("DOMContentLoaded", () => {
     // 設定觀察對象：告訴 observer 要觀察哪個目標元素
@@ -164,6 +168,6 @@ attractions.addEventListener("click", (e) => {
         if(e.target.nodeName == "IMG") {
             id = e.target.parentElement.parentElement.getAttribute("data-id");
         }
-        window.location.assign(`/attraction/${id}`);
+        window.location.assign(`attraction/${id}`);
     }
 });
