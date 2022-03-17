@@ -179,7 +179,9 @@ function dragStart(event) {
     startX = event.pageX;
 }
 function dragMove(event) {
-    event.preventDefault();
+    if(event.type == "mousemove") {
+        event.preventDefault();
+    }
     if(!isDown) { return; }
 }
 function dragEnd(event) {
