@@ -29,7 +29,7 @@ fetch(url)
 // 若註記為 false，則不自動翻頁但將 auto 註記開啟；若註記為 true，則進行自動翻頁
 const intervalID = window.setInterval(() => {
     if(autoSlider) {
-        // nextBtn.click();
+        nextBtn.click();
     }
     autoSlider = true;
 }, 5000);
