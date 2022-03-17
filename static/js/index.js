@@ -79,9 +79,13 @@ function renderAttractions(renderData) {
             attractionWrap.classList.add("attraction-wrap");
             attractionWrap.setAttribute("data-id", attraction.id);
             // 旅遊景點圖片
+            const attractionImgWrap = document.createElement("div");
+            attractionImgWrap.classList.add("attraction-img-wrap");
             const attractionImg = document.createElement("img");
-            attractionImg.style.backgroundImage = `url(${attraction.images[0]}`;
+            // attractionImg.style.backgroundImage = `url(${attraction.images[0]}`;
+            attractionImg.src = attraction.images[0];
             attractionImg.classList.add("attraction-img");
+            attractionImgWrap.appendChild(attractionImg);
             // 旅遊景點名稱
             const attractionTitle = document.createElement("div");
             attractionTitle.textContent = attraction.name;
@@ -95,7 +99,7 @@ function renderAttractions(renderData) {
             attractionCategory.textContent = attraction.category;
             attractionCategory.classList.add("attraction-category");
             // 將新增內容加入區塊中
-            attractionWrap.appendChild(attractionImg);
+            attractionWrap.appendChild(attractionImgWrap);
             attractionWrap.appendChild(attractionTitle);
             attractionWrap.appendChild(attractionMrt);
             attractionWrap.appendChild(attractionCategory);
@@ -156,7 +160,10 @@ searchText.addEventListener("keydown", (e) => {
 });
 attractions.addEventListener("click", (e) => {
     if(e.target.nodeName != "UL") {
-        url = `/attraction/${e.target.parentElement.getAttribute("data-id")}`;
-        window.location.assign(url);
+        let id = e.target.parentElement.getAttribute("data-id");
+        if(e.target.nodeName == "IMG") {
+            id = e.target.parentElement.parentElement.getAttribute("data-id");
+        }
+        window.location.assign(`/attraction/${id}`);
     }
 });
