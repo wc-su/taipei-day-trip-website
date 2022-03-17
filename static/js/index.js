@@ -79,9 +79,13 @@ function renderAttractions(renderData) {
             attractionWrap.classList.add("attraction-wrap");
             attractionWrap.setAttribute("data-id", attraction.id);
             // 旅遊景點圖片
+            const attractionImgWrap = document.createElement("div");
+            attractionImgWrap.classList.add("attraction-img-wrap");
             const attractionImg = document.createElement("img");
-            attractionImg.style.backgroundImage = `url(${attraction.images[0]}`;
+            // attractionImg.style.backgroundImage = `url(${attraction.images[0]}`;
+            attractionImg.src = attraction.images[0];
             attractionImg.classList.add("attraction-img");
+            attractionImgWrap.appendChild(attractionImg);
             // 旅遊景點名稱
             const attractionTitle = document.createElement("div");
             attractionTitle.textContent = attraction.name;
@@ -95,7 +99,7 @@ function renderAttractions(renderData) {
             attractionCategory.textContent = attraction.category;
             attractionCategory.classList.add("attraction-category");
             // 將新增內容加入區塊中
-            attractionWrap.appendChild(attractionImg);
+            attractionWrap.appendChild(attractionImgWrap);
             attractionWrap.appendChild(attractionTitle);
             attractionWrap.appendChild(attractionMrt);
             attractionWrap.appendChild(attractionCategory);
@@ -118,8 +122,9 @@ function renderAttractions(renderData) {
     }
 }
 
+
 // 頁面初始
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     // 設定觀察對象：告訴 observer 要觀察哪個目標元素
     observer.observe(attractions_observer);
 });
@@ -155,8 +160,17 @@ searchText.addEventListener("keydown", (e) => {
     }
 });
 attractions.addEventListener("click", (e) => {
-    if(e.target.nodeName != "UL") {
-        url = `/attraction/${e.target.parentElement.getAttribute("data-id")}`;
-        window.location.assign(url);
+    const target = e.target;
+    if(target.nodeName != "UL") {
+        const targetParent = target.parentElement;
+        if(target.nodeName == "P" && targetParent.classList.contains("attractions--nodata")) {
+            // 無景點資料，不做處理
+            return;
+        }
+        let id = targetParent.getAttribute("data-id");
+        if(target.nodeName == "IMG") {
+            id = targetParent.parentElement.getAttribute("data-id");
+        }
+        window.location.assign(`attraction/${id}`);
     }
 });
