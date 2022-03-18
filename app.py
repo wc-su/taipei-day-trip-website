@@ -1,5 +1,5 @@
 from flask import *
-from api import api
+from routes.api import api
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
