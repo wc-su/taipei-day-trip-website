@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import json
+from routes.config import Config
 from models.connectDB import DBModel
 
 # 從檔案撈取資料
@@ -34,7 +35,9 @@ for index, attraction in enumerate(attractions):
             })
 
 # 連線到資料庫
-initDB_model = DBModel("../", "mypool", 1)
+config = Config()
+config.get_env_config("../")
+initDB_model = DBModel("mypool", 1, config.db_settings)
 if not initDB_model.is_connected():
     print("connect database error")
     exit()
@@ -85,3 +88,5 @@ if result["status"] == "err":
 # 資料寫入 table `attraction_image`
 insert_command = "INSERT INTO attraction_image (attraction_id, image) VALUES ((SELECT id FROM attraction WHERE name = %(name)s LIMIT 1), %(image)s)"
 result = initDB_model.insert(insert_command, attraction_image)
+
+print("progress end")

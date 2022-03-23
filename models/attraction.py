@@ -1,7 +1,8 @@
+from models.connectDB import DB_model
+
 class AttractionMouel:
     def __init__(self, DB_model):
         self.DB_model = DB_model
-
 
     # 取得多筆景點資訊
     def get_attractions(self, page, keyword, dataCount):
@@ -26,8 +27,7 @@ class AttractionMouel:
             { "keyword": keyword, "index": startIndex, "dataCount": dataCount + 1 },
             "all", True
         )
-    
-    
+
     # 取得特定 id 景點資訊
     def get_attraction(self, id):
         query_command = """
@@ -45,3 +45,5 @@ class AttractionMouel:
             { "id":id },
             "one", True
         )
+
+attraction_model = AttractionMouel(DB_model)

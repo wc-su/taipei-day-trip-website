@@ -1,7 +1,13 @@
 from flask import Blueprint, request
-from models.connectDB import DBModel
-from models.attraction import AttractionMouel
-from views.attraction import AttractionView
+# Blueprint
+from routes.user import user
+# models
+from models.connectDB import DB_model
+from models.attraction import attraction_model
+from models.user import user_model
+# views
+from views.attraction import attraction_view
+from views.user import user_view
 
 api = Blueprint(
 	"api",
@@ -10,14 +16,12 @@ api = Blueprint(
     static_folder="static"
 )
 
+api.register_blueprint(
+    user,
+    url_prefix="/user"
+)
+
 dataCount = 12 # 每一頁資料筆數
-
-# models
-DB_model = DBModel("", "mypool", 5)
-attraction_model = AttractionMouel(DB_model)
-
-# views
-attraction_view = AttractionView()
 
 @api.route("/attractions")
 def attractions():

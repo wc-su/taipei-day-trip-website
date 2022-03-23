@@ -102,3 +102,5 @@ class AttractionView:
         self.response = { "data": data }
         self.http_code = 200
         return self.get_response()
+
+attraction_view = AttractionView()

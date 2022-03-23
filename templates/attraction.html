@@ -13,8 +13,9 @@
         <div class="nav__container">
             <h1 class="logo"><a href="/">台北一日遊</a></h1>
             <ul class="menu">
-                <li class="menu__item"><a href="/">預定行程</a></li>  
-                <li class="menu__item"><a href="/">登入/註冊</a></li> 
+                <li class="menu__item"><a data-menu="booking" href="/">預定行程</a></li>
+                <li class="menu__item menu__item--inactive"><a data-menu="login" href="/" id="item-login">登入/註冊</a></li>
+                <li class="menu__item menu__item--inactive"><a data-menu="logout" href="/" id="item-logout">登出系統</a></li>
             </ul>
         </div>
     </div>
@@ -66,9 +67,31 @@
             </div>
         </div>
     </div>
+    <div class="user-wrap">
+        <form class="user-container" id="user-login">
+            <h3>登入會員帳號</h3>
+            <input type="email" name="login-email" placeholder="輸入電子信箱" id="login-email">
+            <input type="password" name="login-password" placeholder="輸入密碼" id="login-password">
+            <input type="submit" value="登入帳戶">
+            <div class="user__msg"></div>
+            <a data-="login" href="">還沒有帳戶？點此註冊</a>
+            <div class="user__close-line"></div>
+        </form>
+        <form class="user-container" id="user-signup">
+            <h3>註冊會員帳號</h3>
+            <input type="text" name="signup-name" placeholder="輸入姓名" id="signup-name">
+            <input type="email" name="signup-email" placeholder="輸入電子信箱" id="signup-email">
+            <input type="password" name="signup-password" placeholder="輸入密碼" id="signup-password">
+            <input type="submit" value="註冊新帳戶">
+            <div class="user__msg"></div>
+            <a href="">已經有帳戶了？點此登入</a>
+            <div class="user__close-line"></div>
+        </form>
+    </div>
     <div class="footer">
         <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
     </div>
+    <script src="/static/js/common.js"></script>
     <script src="/static/js/attraction.js"></script>
 </body>
 </html>
