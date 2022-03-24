@@ -56,11 +56,13 @@ class DBModel:
         try:
             conn_obj = self.conn_pool.get_connection()
             cursor = conn_obj.cursor()
-            print("db insert", command, data)
             for item in data:
                 cursor.execute(command, item)
+            
+            count = cursor.rowcount
 
             self.response["status"] = "ok"
+            self.response["count"] = count
 
             conn_obj.commit()
         except Exception as ex:
@@ -73,7 +75,6 @@ class DBModel:
         return self.response
 
     def query(self, command, data, mode, multi_command=False):
-        # print("db query:", command, data, mode)
         self.reset_response()
         try:
             conn_obj = self.conn_pool.get_connection()
