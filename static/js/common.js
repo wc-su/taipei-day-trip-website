@@ -8,36 +8,23 @@ const userContainer = document.querySelector(".user-container");
 const userLogin = document.querySelector("#user-login");
 const loginEmail = document.querySelector("#login-email");
 const loginPassword = document.querySelector("#login-password");
+const loginMessage = document.querySelector("#login-message");
 
 const userSignup = document.querySelector("#user-signup");
 const signupName = document.querySelector("#signup-name");
 const signupEmail = document.querySelector("#signup-email");
 const signupPassword = document.querySelector("#signup-password");
+const signupMessage = document.querySelector("#signup-message");
 
 // 頁面初始
 window.addEventListener("DOMContentLoaded", () => {
-    console.log("window DOMContentLoaded");
-    initDOMLoaded();
-});
-async function initDOMLoaded() {
-    return fetch("/api/user"
-    ).then((response) => {
-        return response.json()
-    }).then((data) => {
-        console.log(data);
-        if(data.data) {
-            console.log("ok", data);
-            // itemLogin.parentElement.classList.add("menu__item--inactive");
+    fetchUserAPI("GET").then(result => {
+        if(result.data) {
             itemLogout.parentElement.classList.remove("menu__item--inactive");
         } else {
-            console.log("fail");
             itemLogin.parentElement.classList.remove("menu__item--inactive");
-            // itemLogout.parentElement.classList.add("menu__item--inactive");
         }
-    })
-}
-window.addEventListener("load", () => {
-    console.log("window load");
+    });
 });
 navMenu.addEventListener("click", (e) => {
     if(e.target.nodeName == "A") {
@@ -49,91 +36,208 @@ navMenu.addEventListener("click", (e) => {
                 userWrap.classList.remove("user-wrap--inactive");
                 userWrap.classList.add("user-wrap--active");
                 // 預設顯示登入畫面
-                userLogin.classList.add("user-container--active");
+                renderUserWrap("login");
                 break;
             case "logout":
-                fetch("/api/user", {
-                    method: "DELETE",
-                    headers: { "content-type": "application/json" }
-                }).then((response) => {
-                    return response.json()
-                }).then((data) => {
-                    console.log(data);
-                    if(data["ok"]) {
-                        console.log("ok");
+                fetchUserAPI(
+                    "DELETE",
+                    { "content-type": "application/json" }
+                ).then(result => {
+                    if(result["ok"]) {
                         window.location.reload();
                     } else {
-                        console.log("fail");
+                        console.log("delete fail");
                     }
-                })
+                });
                 break;
         }
     }
 });
-userWrap.addEventListener("click", (e) => {
-    e.preventDefault();
-    if(e.target.nodeName == "DIV") {
-        if(e.target.classList.contains("user-wrap") || e.target.classList.contains("user__close-line")) {
-            userWrap.classList.add("user-wrap--inactive");
-            userWrap.classList.remove("user-wrap--active");
-            userLogin.classList.remove("user-container--active");
-            userSignup.classList.remove("user-container--active");
-        }
-    }
-});
+// 移除 form 預設事件
+userWrap.addEventListener("click", event => event.preventDefault());
+userWrap.addEventListener("mousedown", exitUserWrap);
+userWrap.addEventListener("touchstart", exitUserWrap);
+
 userLogin.addEventListener("click", (e) => {
     if(e.target.nodeName == "INPUT" && e.target.type == "submit") {
-        console.log("login");
-        fetch("/api/user", {
-            method: "PATCH",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-                email: loginEmail.value,
-                password: loginPassword.value
-            })
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-            console.log(data);
-            if(data["ok"]) {
-                console.log("ok");
-                window.location.reload();
-            } else {
-                console.log("fail");
-            }
-        })
+        if(isValid("login")) {
+            fetchUserAPI(
+                "PATCH",
+                { "content-type": "application/json" },
+                {
+                    email: loginEmail.value,
+                    password: loginPassword.value
+                }
+            ).then(result => {
+                if(result["ok"]) {
+                    window.location.reload();
+                } else {
+                    loginMessage.textContent = result["message"];
+                    loginMessage.parentElement.classList.add("user__err-message--active");
+                }
+            });
+        }
     }
-    // 改顯示註冊畫面
     if(e.target.nodeName == "A") {
-        userLogin.classList.remove("user-container--active");
-        userSignup.classList.add("user-container--active");
+        // 改顯示註冊畫面
+        renderUserWrap("signup");
     }
 });
 userSignup.addEventListener("click", (e) => {
     if(e.target.nodeName == "INPUT" && e.target.type == "submit") {
-        console.log("signup");
-        fetch("/api/user", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-                name: signupName.value,
-                email: signupEmail.value,
-                password: signupPassword.value
-            })
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-            console.log(data);
-            if(data["ok"]) {
-                console.log("ok");
-            } else {
-                console.log("fail");
-            }
-        })
+        if(isValid("signup")){
+            fetchUserAPI(
+                "POST",
+                { "content-type": "application/json" },
+                {
+                    name: signupName.value,
+                    email: signupEmail.value,
+                    password: signupPassword.value
+                }
+            ).then(result => {
+                if(result["ok"]) {
+                    signupMessage.textContent = "註冊成功";
+                    signupMessage.parentElement.classList.remove("user__err-message--invalid");
+                    signupMessage.parentElement.classList.add("user__err-message--valid");
+                    signupMessage.parentElement.classList.remove("user__err-message--invalid");
+                } else {
+                    signupMessage.textContent = result["message"];
+                    signupMessage.parentElement.classList.add("user__err-message--active");
+                    signupMessage.parentElement.classList.remove("user__err-message--valid");
+                    signupMessage.parentElement.classList.add("user__err-message--invalid");
+                }
+            });
+        }
     }
-    // 改顯示登入畫面
     if(e.target.nodeName == "A") {
-        userLogin.classList.add("user-container--active");
-        userSignup.classList.remove("user-container--active");
+        // 改顯示登入畫面
+        renderUserWrap("login");
     }
 });
+
+// UserWrap 要顯示畫面 (login / signup)
+function renderUserWrap(type="default") {
+    switch(type) {
+        case "login":
+            userLogin.classList.add("user-container--active");
+            userSignup.classList.remove("user-container--active");
+            break;
+        case "signup":
+            userLogin.classList.remove("user-container--active");
+            userSignup.classList.add("user-container--active");
+            break;
+        default:
+            userLogin.classList.remove("user-container--active");
+            userSignup.classList.remove("user-container--active");
+            break;
+    }
+}
+
+function exitUserWrap(event) {
+    const target = event.target;
+    if((target.nodeName == "DIV" && target.classList.contains("user-wrap"))
+    || (target.nodeName == "IMG" && target.classList.contains("user__close"))) {
+        userWrap.classList.add("user-wrap--inactive");
+        userWrap.classList.remove("user-wrap--active");
+        renderUserWrap();
+    }
+}
+
+async function fetchUserAPI(methods, headers={}, body=null) {
+    if(body) {
+        body = JSON.stringify(body);
+    }
+    return fetch("/api/user", {
+        method: methods,
+        headers: headers,
+        body: body
+    }).then((response) => {
+        return response.json()
+    }).then((result) => {
+        return result;
+    })
+}
+
+function checkData(name=null, email, password) {
+    checkResult = { "err": true, "message": "" }
+    // 檢核 姓名
+    if(name != null && !name) {
+        checkResult["message"] = "姓名不可為空白";
+        return checkResult;
+    }
+    // 檢核 電子信箱
+    if(!email) {
+        checkResult["message"] = "電子信箱不可為空白";
+        return checkResult;
+    } else {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+        } else {
+            checkResult["message"] = "電子信箱格式錯誤";
+            return checkResult;
+        }
+    }
+    // 檢核 密碼
+    if(!password) {
+        checkResult["message"] = "密碼不可為空白";
+        return checkResult;
+    }
+    if(password.length < 6) {
+        checkResult["message"] = "密碼長度需超過6位";
+        return checkResult;
+    }
+    // checkResult = { "err": false, "message": "驗證成功" };
+    return checkResult;
+}
+
+function isValid(checkArea) {
+    let valid = true;
+    const checkList = document.querySelectorAll(`[data-verify=${checkArea}]`);
+    for(const checkItem of checkList) {
+        const input = checkItem.querySelector("input");
+        const result = checkData(input.name, input.value);
+        const messageArea = checkItem.querySelector(".user__err-message");
+        messageArea.children[0].textContent = result;
+        if(result) {
+            valid = false;
+            checkItem.classList.add("user__verify-item--invalid");
+        } else {
+            checkItem.classList.remove("user__verify-item--invalid");
+        }
+    }
+    return valid;
+}
+
+function checkData(inputName, inputValue) {
+    switch(inputName) {
+        case "name":
+            if(!inputValue) {
+                return "姓名不可為空白";
+            }
+            break;
+        case "email":
+            if(!inputValue) {
+                return  "電子信箱不可為空白";
+            }
+            // 之後再調整和後端一致
+            // if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValue))) {
+            //     return  "電子信箱格式錯誤";
+            // }
+            break;
+        case "password":
+            if(!inputValue) {
+                return  "密碼不可為空白";
+            }
+            if(inputValue.length < 6) {
+                return "密碼長度需超過6位";
+            }
+            break;
+        default:
+            break;
+    }
+    // 驗證成功
+    return "";
+}
+
+function resetUserContainer() {
+
+}

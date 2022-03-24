@@ -108,31 +108,13 @@ body {
     width: 100%; height: 10px;
     background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
 }
-.user-container > .user__close-line {
+.user-container > .user__close {
     position: absolute; top: 27px; right: 17px;
-    width: 16px; height: 16px;
     cursor: pointer;
-}
-.user-container > .user__close-line::before,
-.user-container > .user__close-line::after {
-    content: "";
-    display: block;
-    width: 16px; height: 1px;
-    background: #666666;
-    position: absolute; top: 50%; left: 0;
     transition: transform 0.4s;
 }
-.user-container > .user__close-line::before {
-    transform: rotate(45deg) scale(1.3);
-}
-.user-container > .user__close-line::after {
-    transform: rotate(-45deg) scale(1.3);
-}
-.user-container > .user__close-line:hover::before {
-    transform: rotate(315deg) scale(1.2);
-}
-.user-container > .user__close-line:hover::after {
-    transform: rotate(225deg) scale(1.2);
+.user-container > .user__close:hover {
+    transform: rotate(270deg);
 }
 .user-container > h3 {
     font-size: 24px;
@@ -140,19 +122,70 @@ body {
     text-align: center;
     margin: 0 0 18px 0;
 }
-.user-container > input {
+.user-container input {
     border-radius: 5px;
     padding: 15px;
 }
-.user-container > input:not(input[type="submit"]) {
+.user-container input:not(input[type="submit"]) {
     border: 1px solid #CCCCCC;
 }
-.user-container > input[type="submit"] {
+.user-container input[type="submit"] {
     color: #FFFFFF;
     font-size: 19px;
     background: #448899;
     border: none;
     cursor: pointer;
+}
+.user__verify-item {
+    display: grid; gap: 10px;
+    font-size: 14px;
+}
+.user__err-message {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.user__err-message > span {
+    color: red;
+    padding-left: 16px;
+    position: relative;
+}
+.user__err-message > span::before {
+    content: "\00a0!\00a0";
+    color: #FFFFFF;
+    position: absolute; top: 50%; left: 0;
+    transform: translateY(-50%) scale(0.8);
+    border-radius: 50%;
+    background: red;
+}
+.user__err-message > span::after {
+    display: none;
+    content: "\00a0L\00a0";
+    color: #FFFFFF;
+    position: absolute; top: 50%; left: 0;
+    transform: translateY(-50%) scaleX(-0.8) rotate(-45deg);
+    border-radius: 50%;
+    background: green;
+}
+.user__verify-item--invalid > input {
+    outline: 1px solid red;
+}
+.user__verify-item--invalid > .user__err-message {
+    display: flex;
+    justify-content: flex-start;
+}
+.user__err-message--invalid,
+.user__err-message--valid {
+    display: flex;
+}
+.user__err-message--valid > span {
+    color: green;
+}
+.user__err-message--valid > span::after {
+    display: block;
+}
+.user__err-message--valid > span::before {
+    display: none;
 }
 .user-container > a {
     display: block;
@@ -160,6 +193,7 @@ body {
     text-decoration: none;
     color: #666666;
     margin: 12px 0 0 0;
+    cursor: pointer;
 }
 
 .footer {

@@ -38,22 +38,51 @@
     <div class="user-wrap">
         <form class="user-container" id="user-login">
             <h3>登入會員帳號</h3>
-            <input type="email" name="login-email" placeholder="輸入電子信箱" id="login-email">
-            <input type="password" name="login-password" placeholder="輸入密碼" id="login-password">
+            <div class="user__verify-item" data-verify="login">
+                <input type="email" name="email" placeholder="輸入電子信箱" id="login-email">
+                <div class="user__err-message">
+                    <span></span>
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="login">
+                <input type="password" name="password" placeholder="輸入密碼" id="login-password">
+                <div class="user__err-message">
+                    <span></span>
+                </div>
+            </div>
             <input type="submit" value="登入帳戶">
-            <div class="user__msg"></div>
-            <a data-="login" href="">還沒有帳戶？點此註冊</a>
-            <div class="user__close-line"></div>
+            <div class="user__err-message">
+                <span id="login-message"></span>
+            </div>
+            <a>還沒有帳戶？點此註冊</a>
+            <img class="user__close" src="/static/img/icon_close.png" alt="">
         </form>
         <form class="user-container" id="user-signup">
             <h3>註冊會員帳號</h3>
-            <input type="text" name="signup-name" placeholder="輸入姓名" id="signup-name">
-            <input type="email" name="signup-email" placeholder="輸入電子信箱" id="signup-email">
-            <input type="password" name="signup-password" placeholder="輸入密碼" id="signup-password">
+            <div class="user__verify-item" data-verify="signup">
+                <input type="text" name="name" placeholder="輸入姓名" id="signup-name">
+                <div class="user__err-message">
+                    <span></span>
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="signup">
+                <input type="email" name="email" placeholder="輸入電子郵件" id="signup-email">
+                <div class="user__err-message">
+                    <span></span>
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="signup">
+                <input type="password" name="password" placeholder="輸入密碼" id="signup-password">
+                <div class="user__err-message">
+                    <span></span>
+                </div>
+            </div>
             <input type="submit" value="註冊新帳戶">
-            <div class="user__msg"></div>
-            <a href="">已經有帳戶了？點此登入</a>
-            <div class="user__close-line"></div>
+            <div class="user__err-message">
+                <span id="signup-message">XXXX</span>
+            </div>
+            <a>已經有帳戶了？點此登入</a>
+            <img class="user__close" src="/static/img/icon_close.png" alt="">
         </form>
     </div>
     <div class="footer">

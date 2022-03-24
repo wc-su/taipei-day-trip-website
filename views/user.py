@@ -1,50 +1,38 @@
-from flask import make_response
-
 class UserView:
     def __init__(self):
-        self.response = { "error": True, "message": "系統錯誤" }
-        self.http_code = 500
-        self.data = None
-    
-    def get_response(self):
-        return self.response, self.http_code
+        self.ok_response = { "ok": True }
+        self.err_response = { "error": True, "message": "" }
+        self.http_code = 200
+        self.response_flag = True # 依該 flag 決定回傳 ok / err 訊息
+        self.token_data = None
 
-    def set_response(self, response, http_code):
-        self.response = response
+    def set_reponse(self, flag, response, http_code):
+        self.response_flag = flag
+        self.err_response["message"] = response
         self.http_code = http_code
 
     def render(self, result):
-        print("user view render", result)
-        if result["status"] == "err":
-            pass
+        if result:
+            if result["status"] == "err":
+                self.set_reponse(False, "伺服器內部錯誤", 500)
+            else:   
+                if result["count"] > 0:
+                    if result["data"]:
+                        self.token_data = {
+                            "id": result["data"][0],
+                            "name": result["data"][1],
+                            "email": result["data"][2]
+                        }
+                    else:
+                        self.token_data = None
+                    self.set_reponse(True, "", 200)
+                else:
+                    self.set_reponse(False, "登入失敗，帳號或密碼錯誤或其他原因", 400)
+            return self.render(None)
         else:
-            self.response = {
-                "ok": True
-            }
-            self.http_code = 200
-        return self.get_response()
-
-    def render_login(self, result):
-        print("user view render login", result)
-        if result["status"] == "err":
-            pass
-        else:
-            self.data = {
-                "id": result["data"][0],
-                "name": result["data"][1],
-                "email": result["data"][2]
-            }
-            self.response = {
-                "ok": True
-            }
-            self.http_code = 200
-        return self.get_response()
-
-    def render_logout(self):
-        self.response = {
-                "ok": True
-            }
-        self.http_code = 200
-        return self.get_response()
+            if self.response_flag:
+                return self.ok_response, self.http_code
+            else:
+                return self.err_response, self.http_code
 
 user_view = UserView()
