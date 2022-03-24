@@ -74,6 +74,8 @@ userLogin.addEventListener("click", (e) => {
                 } else {
                     loginMessage.textContent = result["message"];
                     loginMessage.parentElement.classList.add("user__err-message--active");
+                    loginMessage.parentElement.classList.remove("user__err-message--valid");
+                    loginMessage.parentElement.classList.add("user__err-message--invalid");
                 }
             });
         }
@@ -81,6 +83,8 @@ userLogin.addEventListener("click", (e) => {
     if(e.target.nodeName == "A") {
         // 改顯示註冊畫面
         renderUserWrap("signup");
+        // 清除畫面資料
+        resetUserContainer(userLogin);
     }
 });
 userSignup.addEventListener("click", (e) => {
@@ -112,6 +116,8 @@ userSignup.addEventListener("click", (e) => {
     if(e.target.nodeName == "A") {
         // 改顯示登入畫面
         renderUserWrap("login");
+        // 清除畫面資料
+        resetUserContainer(userSignup);
     }
 });
 
@@ -140,6 +146,9 @@ function exitUserWrap(event) {
         userWrap.classList.add("user-wrap--inactive");
         userWrap.classList.remove("user-wrap--active");
         renderUserWrap();
+        // 清除畫面資料
+        resetUserContainer(userLogin);
+        resetUserContainer(userSignup);
     }
 }
 
@@ -238,6 +247,12 @@ function checkData(inputName, inputValue) {
     return "";
 }
 
-function resetUserContainer() {
-
+function resetUserContainer(resetArea) {
+    const resetList = resetArea.querySelectorAll("div.user__verify-item");
+    for(const resetItem of resetList) {
+        resetItem.classList.remove("user__verify-item--invalid");
+        // 清除 input value
+        const input = resetItem.querySelector("input");
+        input.value = "";
+    }
 }

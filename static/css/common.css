@@ -64,12 +64,12 @@ body {
     z-index: 20;
 }
 .user-wrap--inactive {
-    animation: user-animation-1b 1s;
+    animation: user-animation-1b 0.8s;
 }
 .user-wrap--active {
     bottom: 0; left: 0;
     border-bottom-left-radius: 0;
-    animation: user-animation-1a 0.8s;
+    animation: user-animation-1a 0.6s;
 }
 @keyframes user-animation-1a {
     0% { bottom: 100%; left: 100%; border-bottom-left-radius: 50%; }
@@ -81,7 +81,7 @@ body {
 }
 .user-wrap--active > .user-container--active {
     transform: translateX(-50%) scale(1, 1);
-    animation: user-animation-2a 0.8s;
+    animation: user-animation-2a 0.6s;
 }
 @keyframes user-animation-2a {
     0%, 33% { transform: translateX(-50%) scale(0, 0); }
@@ -96,11 +96,11 @@ body {
     width: 340px;
     background: #FFFFFF;
     border-radius: 6px;
-    display: grid; gap: 10px;
+    display: grid; gap: 12px;
     overflow: hidden;
     padding: 27px 15px 18px 15px;
     transform: translateX(-50%) scale(0, 0);
-    animation: user-animation-2b 0.5s;
+    animation: user-animation-2b 0.3s;
 }
 .user-container::before {
     content: "";
@@ -138,7 +138,23 @@ body {
 }
 .user__verify-item {
     display: grid; gap: 10px;
+    position: relative;
+}
+.user__verify-item > label {
+    pointer-events: none;
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(255, 255, 255, 0);
+    transition: all 0.25s;
+}
+.user__verify-item > input::placeholder {
+    color: transparent;
+}
+.user__verify-item > input:focus ~ label,
+.user__verify-item > input:not(:placeholder-shown) ~ label {
+    top: -5px; left: 6px;
+    background: rgba(255, 255, 255, 1);
     font-size: 14px;
+    padding: 0 5px;
 }
 .user__err-message {
     display: none;
@@ -188,6 +204,7 @@ body {
     display: none;
 }
 .user-container > a {
+    justify-self: center;
     display: block;
     text-align: center;
     text-decoration: none;
