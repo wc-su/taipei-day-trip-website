@@ -111,10 +111,6 @@ body {
 .user-container > .user__close {
     position: absolute; top: 27px; right: 17px;
     cursor: pointer;
-    transition: transform 0.4s;
-}
-.user-container > .user__close:hover {
-    transform: rotate(270deg);
 }
 .user-container > h3 {
     font-size: 24px;
@@ -183,8 +179,8 @@ body {
     border-radius: 50%;
     background: green;
 }
-.user__verify-item--invalid > input {
-    outline: 1px solid red;
+.user__verify-item--invalid > input:not(input[type="submit"]) {
+    border-color: red;
 }
 .user__verify-item--invalid > .user__err-message {
     display: flex;
