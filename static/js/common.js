@@ -104,7 +104,6 @@ userSignup.addEventListener("click", (e) => {
                     signupMessage.parentElement.classList.remove("user__err-message--active");
                     signupMessage.parentElement.classList.add("user__err-message--valid");
                     signupMessage.parentElement.classList.remove("user__err-message--invalid");
-                    resetUserContainer(userSignup);
                 } else {
                     signupMessage.textContent = result["message"];
                     signupMessage.parentElement.classList.add("user__err-message--active");
@@ -168,37 +167,6 @@ async function fetchUserAPI(methods, headers={}, body=null) {
     })
 }
 
-function checkData(name=null, email, password) {
-    checkResult = { "err": true, "message": "" }
-    // 檢核 姓名
-    if(name != null && !name) {
-        checkResult["message"] = "姓名不可為空白";
-        return checkResult;
-    }
-    // 檢核 電子信箱
-    if(!email) {
-        checkResult["message"] = "電子信箱不可為空白";
-        return checkResult;
-    } else {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-        } else {
-            checkResult["message"] = "電子信箱格式錯誤";
-            return checkResult;
-        }
-    }
-    // 檢核 密碼
-    if(!password) {
-        checkResult["message"] = "密碼不可為空白";
-        return checkResult;
-    }
-    if(password.length < 6) {
-        checkResult["message"] = "密碼長度需超過6位";
-        return checkResult;
-    }
-    // checkResult = { "err": false, "message": "驗證成功" };
-    return checkResult;
-}
-
 function isValid(checkArea) {
     let valid = true;
     const checkList = document.querySelectorAll(`[data-verify=${checkArea}]`);
@@ -251,9 +219,21 @@ function checkData(inputName, inputValue) {
 function resetUserContainer(resetArea) {
     const resetList = resetArea.querySelectorAll("div.user__verify-item");
     for(const resetItem of resetList) {
+        // 清除輸入框效果
         resetItem.classList.remove("user__verify-item--invalid");
         // 清除 input value
         const input = resetItem.querySelector("input");
         input.value = "";
+    }
+    // 清除提示訊息
+    const validMsg = resetArea.querySelector(".user__err-message--valid");
+    if(validMsg) {
+        validMsg.classList.remove("user__err-message--valid");
+        validMsg.children[0].textContent = "";
+    }
+    const invalidMsg = resetArea.querySelector(".user__err-message--invalid");
+    if(invalidMsg) {
+        invalidMsg.classList.remove("user__err-message--invalid");
+        invalidMsg.children[0].textContent = "";
     }
 }
