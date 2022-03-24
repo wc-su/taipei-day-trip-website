@@ -101,9 +101,10 @@ userSignup.addEventListener("click", (e) => {
             ).then(result => {
                 if(result["ok"]) {
                     signupMessage.textContent = "註冊成功";
-                    signupMessage.parentElement.classList.remove("user__err-message--invalid");
+                    signupMessage.parentElement.classList.remove("user__err-message--active");
                     signupMessage.parentElement.classList.add("user__err-message--valid");
                     signupMessage.parentElement.classList.remove("user__err-message--invalid");
+                    resetUserContainer(userSignup);
                 } else {
                     signupMessage.textContent = result["message"];
                     signupMessage.parentElement.classList.add("user__err-message--active");
