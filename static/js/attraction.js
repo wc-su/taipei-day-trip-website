@@ -1,29 +1,128 @@
-let attraction = null; // 景點資訊，
+// * -------------- *
+// |     model      |
+// * -------------- *
+// 景點資訊，
+let attraction = null;
+
+function getData(url) {
+    return fetch(url).then((response) => {
+        return response.json();
+    }).then((data) => {
+        // API 回傳失敗
+        if(data.error) {
+            return;
+        }
+        // 取得景點資訊
+        attraction = data.data;
+    });
+}
+
+// * -------------- *
+// |      view      |
+// * -------------- *
 let autoSlider = true; // 圖片自動播放註記，預設是 true
-let isDown = false;
-let startX = 0;
 const imageContainer = document.querySelector(".img-container");
 const images = document.querySelector(".attraction-imgs");
 const prevBtn = document.querySelector(".img__btn--prev");
 const nextBtn = document.querySelector(".img__btn--next");
 const circles = document.querySelector(".img__circles");
 const radio = document.querySelector(".tour__radio-container");
+
+function renderInit() {
+    window.document.title = `${attraction.name} - 台北一日遊`
+
+    const attractionName = document.querySelector(".attraction-name");
+    attractionName.textContent = attraction.name;
+    const attractionCategory_Mrt = document.querySelector(".attraction-category-mrt");
+    attractionCategory_Mrt.textContent = `${attraction.category} at ${attraction.mrt}`;
+
+    const attractionDescription = document.querySelector(".attraction-description");
+    attractionDescription.textContent = attraction.description;
+    const attractionAddress = document.querySelector(".attraction-address");
+    attractionAddress.textContent = attraction.address;
+    const attractionTransport = document.querySelector(".attraction-transport");
+    attractionTransport.textContent = attraction.transport;
+
+    // 固定圖片區域高度
+    const tourContainer = document.querySelector(".tour-container");
+    imageContainer.style.height = `${tourContainer.offsetHeight}px`;
+
+    // 圖片資訊
+    for(let i = 0; i < attraction.images.length; i++) {
+        // 新增圖片
+        const img = document.createElement("img");
+        img.src = attraction.images[i];
+        img.setAttribute("data-index", i)
+        img.classList.add("attraction-img");
+        images.appendChild(img);
+
+        // 新增圖片圓點
+        const circle = document.createElement("a");
+        circle.setAttribute("data-index", i)
+        circle.classList.add("img__circle");
+        circles.appendChild(circle);
+    }
+
+    // 超過 1 筆資料，讓按鈕 active
+    if(attraction.images.length > 1) {
+        nextBtn.classList.add("img__btn--active");
+        prevBtn.classList.add("img__btn--active");
+    } else {
+        // 取消圖片自動輪播
+        clearInterval(intervalID);
+    }
+
+    // 畫面重新調整
+    renderIndex(0);
+}
+
+function renderIndex(index) {
+    // 關閉自動翻頁
+    autoSlider = false;
+
+    // 調整圖片圓點
+    const circleActive = document.querySelector(".img__circle--active");
+    if(circleActive) {
+        circleActive.classList.remove("img__circle--active");
+    }
+    circles.children[index].classList.add("img__circle--active");
+
+    // 調整圖片
+    const imgActive = document.querySelector(".attraction-img--active");
+    if(imgActive) {
+        imgActive.classList.remove("attraction-img--active");
+    }
+    images.children[index].classList.add("attraction-img--active");
+
+    // 調整左右按鈕
+    // 檢核是否有下一張圖片，更新按鈕 index
+    if(attraction.images[index + 1]) {
+        nextBtn.setAttribute("data-index", index + 1);
+    } else {
+        nextBtn.setAttribute("data-index", 0);
+    }
+    // 檢核是否有上一張圖片，更新按鈕 index
+    if(attraction.images[index - 1]) {
+        prevBtn.setAttribute("data-index", index - 1);
+    } else {
+        prevBtn.setAttribute("data-index", attraction.images.length - 1);
+    }
+}
+
+// * -------------- *
+// |   controller   |
+// * -------------- *
+let isDown = false;
+let startX = 0;
 const tourSubmit = document.querySelector(".tour__submit");
 
-let url = `/api${window.location.pathname}`;
-fetch(url)
-.then((response) => {
-    return response.json();
-}).then((data) => {
-    // API 回傳失敗
-    if(data.error) {
-        return;
-    }
-    // 取得景點資訊
-    attraction = data.data;
+async function init() {
+    let url = `/api${window.location.pathname}`;
+    await getData(url);
     // 載入畫面
     renderInit();
-});
+}
+init();
 
 // 每 5 秒檢核使用者是否有翻頁，使用者有手動翻頁，auto 註記會改為 false 
 // 若註記為 false，則不自動翻頁但將 auto 註記開啟；若註記為 true，則進行自動翻頁
@@ -80,86 +179,6 @@ images.addEventListener("touchmove", dragMove);
 images.addEventListener("mouseleave", dragInit);
 images.addEventListener("mouseup", dragEnd);
 images.addEventListener("touchend", dragEnd);
-
-
-function renderIndex(index) {
-    // 關閉自動翻頁
-    autoSlider = false;
-
-    // 調整圖片圓點
-    const circleActive = document.querySelector(".img__circle--active");
-    if(circleActive) {
-        circleActive.classList.remove("img__circle--active");
-    }
-    circles.children[index].classList.add("img__circle--active");
-
-    // 調整圖片
-    const imgActive = document.querySelector(".attraction-img--active");
-    if(imgActive) {
-        imgActive.classList.remove("attraction-img--active");
-    }
-    images.children[index].classList.add("attraction-img--active");
-
-    // 調整左右按鈕
-    // 檢核是否有下一張圖片，更新按鈕 index
-    if(attraction.images[index + 1]) {
-        nextBtn.setAttribute("data-index", index + 1);
-    } else {
-        nextBtn.setAttribute("data-index", 0);
-    }
-    // 檢核是否有上一張圖片，更新按鈕 index
-    if(attraction.images[index - 1]) {
-        prevBtn.setAttribute("data-index", index - 1);
-    } else {
-        prevBtn.setAttribute("data-index", attraction.images.length - 1);
-    }
-}
-
-function renderInit() {
-    const attractionName = document.querySelector(".attraction-name");
-    attractionName.textContent = attraction.name;
-    const attractionCategory_Mrt = document.querySelector(".attraction-category-mrt");
-    attractionCategory_Mrt.textContent = `${attraction.category} at ${attraction.mrt}`;
-
-    const attractionDescription = document.querySelector(".attraction-description");
-    attractionDescription.textContent = attraction.description;
-    const attractionAddress = document.querySelector(".attraction-address");
-    attractionAddress.textContent = attraction.address;
-    const attractionTransport = document.querySelector(".attraction-transport");
-    attractionTransport.textContent = attraction.transport;
-
-    // 固定圖片區域高度
-    const tourContainer = document.querySelector(".tour-container");
-    imageContainer.style.height = `${tourContainer.offsetHeight}px`;
-
-    // 圖片資訊
-    for(let i = 0; i < attraction.images.length; i++) {
-        // 新增圖片
-        const img = document.createElement("img");
-        img.src = attraction.images[i];
-        img.setAttribute("data-index", i)
-        img.classList.add("attraction-img");
-        images.appendChild(img);
-
-        // 新增圖片圓點
-        const circle = document.createElement("a");
-        circle.setAttribute("data-index", i)
-        circle.classList.add("img__circle");
-        circles.appendChild(circle);
-    }
-
-    // 超過 1 筆資料，讓按鈕 active
-    if(attraction.images.length > 1) {
-        nextBtn.classList.add("img__btn--active");
-        prevBtn.classList.add("img__btn--active");
-    } else {
-        // 取消圖片自動輪播
-        clearInterval(intervalID);
-    }
-
-    // 畫面重新調整
-    renderIndex(0);
-}
 
 function dragInit() {
     isDown = false;

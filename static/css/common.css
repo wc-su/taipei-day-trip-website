@@ -14,6 +14,8 @@ body {
     display: flex; flex-direction: column;
     min-height: 100vh;
     color: #666666;
+    /* login / signup area */
+    position: relative;
 }
 
 .nav {
@@ -23,7 +25,7 @@ body {
     /* 固定在畫面上方 */
     position: fixed; top: 0; left: 0;
     /* 置於最上層 */
-    z-index: 50;
+    z-index: 10;
 }
 .nav__container {
     display: flex; justify-content: space-between; align-items: center;
@@ -34,19 +36,177 @@ body {
     display: block;
     text-decoration: none;
     font-size: 30px;
-    color: #448899;
     font-weight: 700;
+    color: #448899;
     padding: 12px 0;
 }
 .menu {
     display: flex;
+}
+.menu__item {
+    padding: 10px;
+}
+.menu__item--inactive {
+    display: none;
 }
 .menu__item > a {
     display: block;
     color: inherit;
     font-size: 1rem;
     text-decoration: none;
-    padding: 10px;
+}
+
+.user-wrap {
+    position: fixed; bottom: 100%; left: 100%;
+    border-bottom-left-radius: 50%;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 20;
+}
+.user-wrap--inactive {
+    animation: user-animation-1b 0.8s;
+}
+.user-wrap--active {
+    bottom: 0; left: 0;
+    border-bottom-left-radius: 0;
+    animation: user-animation-1a 0.6s;
+}
+@keyframes user-animation-1a {
+    0% { bottom: 100%; left: 100%; border-bottom-left-radius: 50%; }
+    100% { bottom: 0; left: 0; border-bottom-left-radius: 0; }
+}
+@keyframes user-animation-1b {
+    0% { bottom: 0; left: 0; border-bottom-left-radius: 0; }
+    100% { bottom: 100%; left: 100%; border-bottom-left-radius: 50%; }
+}
+.user-wrap--active > .user-container--active {
+    transform: translateX(-50%) scale(1, 1);
+    animation: user-animation-2a 0.6s;
+}
+@keyframes user-animation-2a {
+    0%, 33% { transform: translateX(-50%) scale(0, 0); }
+    100% { transform: translateX(-50%) scale(1, 1); }
+}
+@keyframes user-animation-2b {
+    0% { transform: translateX(-50%) scale(1, 1); }
+    80%, 100% { transform: translateX(-50%) scale(0, 0); }
+}
+.user-container {
+    position: absolute; top: 80px; left: 50%;
+    width: 340px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    display: grid; gap: 12px;
+    overflow: hidden;
+    padding: 27px 15px 18px 15px;
+    transform: translateX(-50%) scale(0, 0);
+    animation: user-animation-2b 0.3s;
+}
+.user-container::before {
+    content: "";
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 10px;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+}
+.user-container > .user__close {
+    position: absolute; top: 27px; right: 17px;
+    cursor: pointer;
+}
+.user-container > h3 {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 18px 0;
+}
+.user-container input {
+    border-radius: 5px;
+    padding: 15px;
+}
+.user-container input:not(input[type="submit"]) {
+    border: 1px solid #CCCCCC;
+}
+.user-container input[type="submit"] {
+    color: #FFFFFF;
+    font-size: 19px;
+    background: #448899;
+    border: none;
+    cursor: pointer;
+}
+.user__verify-item {
+    display: grid; gap: 10px;
+    position: relative;
+}
+.user__verify-item > label {
+    pointer-events: none;
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(255, 255, 255, 0);
+    transition: all 0.25s;
+}
+.user__verify-item > input::placeholder {
+    color: transparent;
+}
+.user__verify-item > input:focus ~ label,
+.user__verify-item > input:not(:placeholder-shown) ~ label {
+    top: -5px; left: 6px;
+    background: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    padding: 0 5px;
+}
+.user__err-message {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.user__err-message > span {
+    color: red;
+    padding-left: 16px;
+    position: relative;
+}
+.user__err-message > span::before {
+    content: "\00a0!\00a0";
+    color: #FFFFFF;
+    position: absolute; top: 50%; left: 0;
+    transform: translateY(-50%) scale(0.8);
+    border-radius: 50%;
+    background: red;
+}
+.user__err-message > span::after {
+    display: none;
+    content: "\00a0L\00a0";
+    color: #FFFFFF;
+    position: absolute; top: 50%; left: 0;
+    transform: translateY(-50%) scaleX(-0.8) rotate(-45deg);
+    border-radius: 50%;
+    background: green;
+}
+.user__verify-item--invalid > input:not(input[type="submit"]) {
+    border-color: red;
+}
+.user__verify-item--invalid > .user__err-message {
+    display: flex;
+    justify-content: flex-start;
+}
+.user__err-message--invalid,
+.user__err-message--valid {
+    display: flex;
+}
+.user__err-message--valid > span {
+    color: green;
+}
+.user__err-message--valid > span::after {
+    display: block;
+}
+.user__err-message--valid > span::before {
+    display: none;
+}
+.user-container > a {
+    justify-self: center;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #666666;
+    margin: 12px 0 0 0;
+    cursor: pointer;
 }
 
 .footer {

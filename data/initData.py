@@ -1,8 +1,9 @@
 import sys
-sys.path.append("..")
+sys.path.append("../")
 
 import json
-import connectDB
+from routes.config import Config
+from models.connectDB import DBModel
 
 # 從檔案撈取資料
 with open("taipei-attractions.json", mode="r") as file:
@@ -33,8 +34,10 @@ for index, attraction in enumerate(attractions):
             })
 
 # 連線到資料庫
-conn_pool = connectDB.connect("../", "mypool", 1)
-if not conn_pool:
+config = Config()
+config.get_env_config("../")
+initDB_model = DBModel("mypool", 1, config.db_settings)
+if not initDB_model.is_connected():
     print("connect database error")
     exit()
 
@@ -55,7 +58,7 @@ CREATE TABLE attraction (
     memo_time VARCHAR(300),      # MEMO_TIME
     PRIMARY KEY (id)
 );"""
-result = connectDB.create(conn_pool, create_command, True)
+result = initDB_model.create(create_command, True)
 if result["status"] == "err":
     print("create table error: attractions")
     exit()
@@ -69,18 +72,20 @@ CREATE TABLE attraction_image (
     PRIMARY KEY(id),
 	FOREIGN KEY (attraction_id) REFERENCES attraction(id) #ON DELETE CASCADE
 );"""
-result = connectDB.create(conn_pool, create_command)
+result = initDB_model.create(create_command)
 if result["status"] == "err":
     print("create table error: attraction-images")
     exit()
 
 # 資料寫入 table `attraction`
 insert_command = "INSERT INTO attraction (" + ", ".join(attraction_data[0]) + ") VALUES (" + ", ".join(["%(" + k + ")s" for k in attraction_data[0].keys()]) + ")"
-result = connectDB.insert(conn_pool, insert_command, attraction_data)
+result = initDB_model.insert(insert_command, attraction_data)
 if result["status"] == "err":
     print("insert error: attraction")
     exit()
 
 # 資料寫入 table `attraction_image`
 insert_command = "INSERT INTO attraction_image (attraction_id, image) VALUES ((SELECT id FROM attraction WHERE name = %(name)s LIMIT 1), %(image)s)"
-result = connectDB.insert(conn_pool, insert_command, attraction_image)
+result = initDB_model.insert(insert_command, attraction_image)
+
+print("progress end")
