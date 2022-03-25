@@ -119,6 +119,7 @@ body {
     margin: 0 0 18px 0;
 }
 .user-container input {
+    min-width: 200px;
     border-radius: 5px;
     padding: 15px;
 }
@@ -193,13 +194,9 @@ body {
 .user__verify-item > input[type="password"] ~ .user__eye-close {
     display: block;
 }
-/* .user__verify-item > input[type="password"].user__password--visible ~ .user__eye { */
-/* .user__verify-item.user__password--visible > input[type="password"] ~ .user__eye { */
 .user__verify-item.user__password--visible > .user__eye {
     display: block;
 }
-/* .user__verify-item > input[type="password"].user__password--visible ~ .user__eye-close { */
-/* .user__verify-item.user__password--visible > input[type="password"] ~ .user__eye-close { */
 .user__verify-item.user__password--visible > .user__eye-close {
     display: none;
 }
