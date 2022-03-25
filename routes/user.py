@@ -90,7 +90,7 @@ def user_patch():
     # 將使用者資訊寫入 cookie
     if user_view.token_data:
         token = make_token(user_view.token_data)
-        resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1))
+        resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1), httponly = True)
     return resp
 
 # 登出

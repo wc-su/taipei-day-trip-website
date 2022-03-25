@@ -186,7 +186,7 @@ body {
 .user__verify-item > .user__eye,
 .user__verify-item > .user__eye-close {
     display: none;
-    position: absolute; top: 16px; right: 10px;
+    position: absolute; top: 18px; right: 10px;
     width: 16px; height: 16px;
     opacity: 0.3;
     cursor: pointer;
