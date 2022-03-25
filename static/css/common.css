@@ -182,6 +182,28 @@ body {
 .user__verify-item--invalid > input:not(input[type="submit"]) {
     border-color: red;
 }
+.user__verify-item > .user__eye,
+.user__verify-item > .user__eye-close {
+    display: none;
+    position: absolute; top: 16px; right: 10px;
+    width: 16px; height: 16px;
+    opacity: 0.3;
+    cursor: pointer;
+}
+.user__verify-item > input[type="password"] ~ .user__eye-close {
+    display: block;
+}
+/* .user__verify-item > input[type="password"].user__password--visible ~ .user__eye { */
+/* .user__verify-item.user__password--visible > input[type="password"] ~ .user__eye { */
+.user__verify-item.user__password--visible > .user__eye {
+    display: block;
+}
+/* .user__verify-item > input[type="password"].user__password--visible ~ .user__eye-close { */
+/* .user__verify-item.user__password--visible > input[type="password"] ~ .user__eye-close { */
+.user__verify-item.user__password--visible > .user__eye-close {
+    display: none;
+}
+
 .user__verify-item--invalid > .user__err-message {
     display: flex;
     justify-content: flex-start;

@@ -3,7 +3,6 @@ const itemLogin = document.querySelector("#item-login");
 const itemLogout = document.querySelector("#item-logout");
 // 登入/註冊事件
 const userWrap = document.querySelector(".user-wrap");
-const userContainer = document.querySelector(".user-container");
 
 const userLogin = document.querySelector("#user-login");
 const loginEmail = document.querySelector("#login-email");
@@ -54,7 +53,22 @@ navMenu.addEventListener("click", (e) => {
     }
 });
 // 移除 form 預設事件
-userWrap.addEventListener("click", event => event.preventDefault());
+userWrap.addEventListener("click", (event) => {
+    event.preventDefault();
+    const target = event.target;
+    // 密碼輸入框 調整為顯碼
+    if(target.nodeName == "IMG" && target.classList.contains("user__eye-close")) {
+        const inputPassword = target.parentElement.querySelector("input[type='password']");
+        inputPassword.type = "text";
+        inputPassword.parentElement.classList.add("user__password--visible");
+    }
+    // 密碼輸入框 調整為隱碼
+    if(target.nodeName == "IMG" && target.classList.contains("user__eye")) {
+        const inputPassword = target.parentElement.querySelector("input[type='text']");
+        inputPassword.type = "password";
+        inputPassword.parentElement.classList.remove("user__password--visible");
+    }
+});
 userWrap.addEventListener("mousedown", exitUserWrap);
 userWrap.addEventListener("touchstart", exitUserWrap);
 
@@ -224,6 +238,13 @@ function resetUserContainer(resetArea) {
         // 清除 input value
         const input = resetItem.querySelector("input");
         input.value = "";
+        // 找到密碼輸入框
+        const inputPassword = resetItem.querySelector("input[name='password']");
+        // 密碼輸入框調整 type=password
+        if(inputPassword) {
+            inputPassword.type = "password";
+            resetItem.classList.remove("user__password--visible");
+        }
     }
     // 清除提示訊息
     const validMsg = resetArea.querySelector(".user__err-message--valid");
