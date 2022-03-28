@@ -6,14 +6,10 @@
 @import "reset.css";
 
 body {
-    /* background: #EFF3F5; */
+    color: #666666;
     background: #FFFFFF;
     font-family: 'Noto Sans TC', sans-serif;
     line-height: 1;
-    /* footer 放置在畫面底部 */
-    display: flex; flex-direction: column;
-    min-height: 100vh;
-    color: #666666;
     /* login / signup area */
     position: relative;
 }
@@ -231,13 +227,14 @@ body {
 .footer {
     background :#757575;
     width: 100%;
-    /* footer 放置在畫面底部 */
-    margin-top: auto;
+    /* footer 延伸到畫面底部 */
+    box-shadow: 0 100vh 0 100vh #757575;
 }
 .footer > .copyright {
     color: #FFFFFF;
     text-align: center;
     padding: 44px 0;
+    
 }
 
 @media (max-width: 1200px) {
