@@ -1,20 +1,35 @@
+import { fetchAPI, formatDate } from "./tool.js"
+import { renderUserWrap, resetUserContainer, initCommon, user } from "./common.js"
+
 // * -------------- *
 // |     model      |
 // * -------------- *
 // 景點資訊，
 let attraction = null;
 
-function getData(url) {
-    return fetch(url).then((response) => {
-        return response.json();
-    }).then((data) => {
+async function getAttraction() {
+    await fetchAPI(`${window.location.pathname}`, "GET")
+    .then(result => {
         // API 回傳失敗
-        if(data.error) {
+        if(result.error) {
             return;
         }
         // 取得景點資訊
-        attraction = data.data;
+        attraction = result.data;
     });
+}
+
+async function addbookingToDB() {
+    // 呼叫 api，將預定行程寫入資料庫
+    return await fetchAPI("/booking", "POST",
+        { "content-type": "application/json" },
+        {
+            "attractionId": attraction.id,
+            "date": tourDate.value,
+            "time": tourRadioArea.querySelector("input[type='radio']:checked").value,
+            "price": tourPrice.textContent
+        }
+    );
 }
 
 // * -------------- *
@@ -26,7 +41,8 @@ const images = document.querySelector(".attraction-imgs");
 const prevBtn = document.querySelector(".img__btn--prev");
 const nextBtn = document.querySelector(".img__btn--next");
 const circles = document.querySelector(".img__circles");
-const radio = document.querySelector(".tour__radio-container");
+const tourRadioArea = document.querySelector(".tour__radio-container");
+const message = document.querySelector(".tour__message");
 
 function renderInit() {
     window.document.title = `${attraction.name} - 台北一日遊`
@@ -72,6 +88,13 @@ function renderInit() {
         clearInterval(intervalID);
     }
 
+    // 設定預定日期：明日到近六個月
+    const today = new Date();
+    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    const afterSixMonth = new Date(tomorrow.getFullYear(), tomorrow.getMonth() + 6, tomorrow.getDate());
+    tourDate.setAttribute("min", formatDate(tomorrow));
+    tourDate.setAttribute("max", formatDate(afterSixMonth));
+
     // 畫面重新調整
     renderIndex(0);
 }
@@ -109,20 +132,53 @@ function renderIndex(index) {
     }
 }
 
+function renderBooking(result) {
+    if(result.ok) {
+        // 資料庫新增/修改成功，載入 booking 畫面
+        window.location.assign("/booking");
+        return;
+    } else {
+        message.classList.add("tour__message--visible");
+        message.textContent = result.message;
+    }
+}
+
 // * -------------- *
 // |   controller   |
 // * -------------- *
 let isDown = false;
 let startX = 0;
 const tourSubmit = document.querySelector(".tour__submit");
+const tourPrice = document.querySelector(".tour__price > span");
+const tourDate = document.querySelector(".tour__date");
+
 
 async function init() {
-    let url = `/api${window.location.pathname}`;
-    await getData(url);
+    await initCommon();
+    await getAttraction();
     // 載入畫面
     renderInit();
+    
+    // 若是由 submit(未登入)跳回，直接執行 submit 預定行程
+    const localData = localStorage.getItem("data-position");
+    localStorage.removeItem("data-position");
+    if(localData) {
+        const loginPosition = JSON.parse(localData);
+        if(loginPosition && loginPosition.position == "attraction") {
+            tourDate.value = loginPosition.value;
+            tourSubmit.click();
+        }
+    }
 }
-init();
+
+async function addBooking() {
+    const result = await addbookingToDB();
+    renderBooking(result);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    init();
+});
 
 // 每 5 秒檢核使用者是否有翻頁，使用者有手動翻頁，auto 註記會改為 false 
 // 若註記為 false，則不自動翻頁但將 auto 註記開啟；若註記為 true，則進行自動翻頁
@@ -157,20 +213,42 @@ circles.addEventListener("click", (e) => {
     }
 });
 // 時間選擇 按鈕事件
-radio.addEventListener("click", (e) => {
+tourRadioArea.addEventListener("click", (e) => {
     if(e.target.nodeName == "INPUT") {
-        const price = document.querySelector(".tour__price");
-        if(e.target.value == "1") {
-            price.textContent = "新台幣 2000 元";
+        if(e.target.value == "morning") {
+            tourPrice.textContent = "2000";
         } else {
-            price.textContent = "新台幣 2500 元";
+            tourPrice.textContent = "2500";
         }
     }
 });
 tourSubmit.addEventListener("click", (e) => {
-    // 先取消 submit 事件
+    // 取消 submit 預設事件
     e.preventDefault();
+    // 需登入才能預定行程
+    if(user == null) {
+        localStorage.setItem("data-position", JSON.stringify({
+            "position": "attraction",
+            "value": tourDate.value
+        }));
+        renderUserWrap("login");
+        resetUserContainer("login");
+        return;
+    }
+    // 檢核是否有輸入日期
+    if(tourDate.value) {
+        tourDate.classList.remove("tour__date--error");
+    } else {
+        tourDate.classList.add("tour__date--error");
+        message.classList.add("tour__message--visible");
+        message.textContent = "請選擇日期";
+        return;
+    }
+    // 呼叫 api，將預定行程寫入資料庫
+    addBooking();
 });
+
+
 // 景點圖片 滑鼠/手勢 事件
 images.addEventListener("mousedown", dragStart);
 images.addEventListener("touchstart", dragStart);

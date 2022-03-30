@@ -1,13 +1,14 @@
 from flask import Blueprint, request
+# config
+from routes.config import config
 # Blueprint
 from routes.user import user
+from routes.booking import booking
 # models
 from models.connectDB import DB_model
 from models.attraction import attraction_model
-from models.user import user_model
 # views
 from views.attraction import attraction_view
-from views.user import user_view
 
 api = Blueprint(
 	"api",
@@ -20,8 +21,10 @@ api.register_blueprint(
     user,
     url_prefix="/user"
 )
-
-dataCount = 12 # 每一頁資料筆數
+api.register_blueprint(
+    booking,
+    url_prefix="/booking"
+)
 
 @api.route("/attractions")
 def attractions():
@@ -35,8 +38,8 @@ def attractions():
 	if attraction_view.check_attractions(page):
 		return attraction_view.get_response()
 
-	result = attraction_model.get_attractions(page, keyword, dataCount)
-	return attraction_view.render_attractions(result, page, dataCount)
+	result = attraction_model.get_attractions(page, keyword, config.page_unit_count)
+	return attraction_view.render_attractions(result, page, config.page_unit_count)
 
 @api.route("/attraction/<id>")
 def attraction(id):

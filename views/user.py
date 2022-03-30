@@ -15,7 +15,8 @@ class UserView:
         if result:
             if result["status"] == "err":
                 self.set_reponse(False, "伺服器內部錯誤", 500)
-            else:   
+            else:
+                self.token_data = None
                 if result["count"] > 0:
                     if result["data"]:
                         self.token_data = {
@@ -23,8 +24,6 @@ class UserView:
                             "name": result["data"][1],
                             "email": result["data"][2]
                         }
-                    else:
-                        self.token_data = None
                     self.set_reponse(True, "", 200)
                 else:
                     self.set_reponse(False, "登入失敗，帳號或密碼錯誤或其他原因", 400)

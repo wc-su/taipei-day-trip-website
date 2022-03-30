@@ -20,6 +20,7 @@ secret_key = config.env_config["JWT_SECRET"]
 @user.route("/", methods=["GET"])
 def user_get():
     # 取得 token
+    get_authToken()
     token = request.cookies.get('authId')
     # 檢核使用者狀態
     result = logincheck(token)
@@ -91,6 +92,7 @@ def user_patch():
     if user_view.token_data:
         token = make_token(user_view.token_data)
         resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1), httponly = True)
+        resp.headers["Authorization"] = "Bearer " + token
     return resp
 
 # 登出
@@ -130,9 +132,24 @@ def login_data_check(name, email, password):
         return False
     
     # 檢核 email 格式
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    if not re.fullmatch(regex, email):
-        # return False 
-        pass # 之後再調整和前端一致
+    print(config.email_regex)
+    if not re.match(config.email_regex, email):
+        return False 
 
     return True
+
+
+# 需再調整
+def get_authToken():
+    header_auth = request.headers.get("Authorization")
+    # print("header auth token:", header_auth)
+    token = request.cookies.get('authId')
+    header_auth = token
+    return header_auth
+
+def get_userid():
+    token = get_authToken()
+    result = logincheck(token)
+    if result["status"] == "ok":
+        return result["data"]["id"]
+    return None

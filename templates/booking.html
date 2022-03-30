@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預定行程 - 台北一日遊</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/booking.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav__container">
+            <h1 class="logo"><a href="/">台北一日遊</a></h1>
+            <ul class="menu">
+                <li class="menu__item"><a data-menu="booking" href="/">預定行程</a></li>
+                <li class="menu__item menu__item--inactive"><a data-menu="login" href="/" id="item-login">登入/註冊</a></li>
+                <li class="menu__item menu__item--inactive"><a data-menu="logout" href="/" id="item-logout">登出系統</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main main--no-booking">
+        <div class="tour">
+            <p class="tour__title font-weight--blod">您好，<span></span>，待預訂的行程如下：</p>
+            <div class="tour__has-booking">
+                <div class="tour__img">
+                    <img src="" alt="">
+                </div>
+                <div class="tour__info">
+                    <p class="tour__name font-weight--blod">台北一日遊：<span></span></p>
+                    <p class="tour__date font-weight--blod">日期：<span></span></p>
+                    <p class="tour__time font-weight--blod">時間：<span></span></p>
+                    <p class="tour__price font-weight--blod">費用：<span></span></p>
+                    <p class="tour__address font-weight--blod">地點：<span></span></p>
+                </div>
+                <img class="tour__icon-delete" src="/static/img/icon_delete.png" alt="">
+                <p class="tour__message"></p>
+            </div>
+            <div class="tour__no-booking">
+                <p>目前沒有任何待預訂的行程</p>    
+            </div>
+        </div>
+        <div class="connect">
+            <p class="connect__title font-weight--blod">您的聯絡資訊</p>
+            <div>
+                <label for="connect__name">聯絡姓名：</label>
+                <input type="text" name="" id="connect__name">
+            </div>
+            <div>
+                <label for="connect__email">連絡信箱：</label>
+                <input type="text" name="" id="connect__email">
+            </div>
+            <div>
+                <label for="connect__phone">手機號碼：</label>
+                <input type="tel" name="" id="connect__phone">
+            </div>
+            <p class="connect__caution font-weight--blod">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</p>
+        </div>
+        <div class="credit-card">
+            <p class="credit-card__title font-weight--blod">信用卡付款資訊</p>
+            <div>
+                <label for="credit-card__number">卡片號碼：</label>
+                <input type="text" name="" id="credit-card__number" placeholder="**** **** **** ****" inputmode="number">
+            </div>
+            <div>
+                <label for="credit-card__expir">過期時間：</label>
+                <input type="text" name="" id="credit-card__expir" placeholder="MM / YY" inputmode="number">
+            </div>
+            <div>
+                <label for="credit-card__cvv">驗證密碼：</label>
+                <input type="text" name="" id="credit-card__cvv" placeholder="CVV">
+            </div>
+        </div>
+        <div class="price-check">
+            <p class="font-weight--blod">總價：新台幣 <span class="price-check__total"></span> 元</p>
+            <input class="price-check__submit" type="submit" value="確認訂購並付款">
+        </div>
+    </div>
+    <div class="user-wrap">
+        <form class="user-container" id="user-login">
+            <h3>登入會員帳號</h3>
+            <div class="user__verify-item" data-verify="login">
+                <input type="email" name="email" placeholder="輸入電子信箱" id="login-email">
+                <label for="login-email">輸入電子信箱</label>
+                <div class="user__input-message">
+                    <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="login">
+                <input type="password" name="password" placeholder="輸入密碼" id="login-password">
+                <label for="login-password">輸入密碼</label>
+                <img src="/static/img/icon_eye.png" class="user__eye" alt="">
+                <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
+                <div class="user__input-message">
+                    <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
+                </div>
+            </div>
+            <input type="submit" value="登入帳戶">
+            <div class="user__err-message">
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
+                <span id="login-message"></span>
+            </div>
+            <a>還沒有帳戶？點此註冊</a>
+            <img class="user__close" src="/static/img/icon_close.png" alt="">
+        </form>
+        <form class="user-container" id="user-signup">
+            <h3>註冊會員帳號</h3>
+            <div class="user__verify-item" data-verify="signup">
+                <input type="text" name="name" placeholder="輸入姓名" id="signup-name">
+                <label for="signup-name">輸入姓名</label>
+                <div class="user__input-message">
+                    <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="signup">
+                <input type="email" name="email" placeholder="輸入電子郵件" id="signup-email">
+                <label for="signup-email">輸入電子郵件</label>
+                <div class="user__input-message">
+                    <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
+                </div>
+            </div>
+            <div class="user__verify-item" data-verify="signup">
+                <input type="password" name="password" placeholder="輸入密碼" id="signup-password">
+                <label for="signup-password">輸入密碼</label>
+                <img src="/static/img/icon_eye.png" class="user__eye" alt="">
+                <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
+                <div class="user__input-message">
+                    <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
+                </div>
+            </div>
+            <input type="submit" value="註冊新帳戶">
+            <div class="user__err-message">
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
+                <span id="signup-message"></span>
+            </div>
+            <a>已經有帳戶了？點此登入</a>
+            <img class="user__close" src="/static/img/icon_close.png" alt="">
+        </form>
+    </div>
+    <div class="footer">
+        <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
+    </div>
+    <script type="module" src="/static/js/common.js"></script>
+    <script type="module" src="/static/js/booking.js"></script>
+</body>
+</html>

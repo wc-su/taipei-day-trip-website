@@ -37,24 +37,24 @@
                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
                     <div class="tour__form-layout">
                         <label class="tour__title">選擇日期：</label>
-                        <input type="date" name="date" class="tour__date" id="date">
+                        <input type="date" name="date" class="tour__date" id="tour__date">
                     </div>
                     <div class="tour__radio-container tour__form-layout">
                         <label class="tour__title">選擇時間：</label>
-                        <input type="radio" id="half-day-1st" name="half-day" value="1" checked/>
+                        <input type="radio" id="half-day-1st" name="half-day" value="morning" checked/>
                         <label for="half-day-1st">上半天</label>
-                        <input type="radio" id="half-day-2nd" name="half-day" value="2"/>
+                        <input type="radio" id="half-day-2nd" name="half-day" value="afternoon"/>
                         <label for="half-day-2nd">下半天</label>
                     </div>
                     <div class="tour__form-layout">
                         <span class="tour__title">導覽費用：</span>
-                        <span class="tour__price">新台幣 2000 元</span>
+                        <span class="tour__price">新台幣 <span>2000</span> 元</span>
                     </div>
                     <input class="tour__submit" type="submit" value="開始預訂行程">
+                    <p class="tour__message"></p>
                 </form>
             </div>
         </div>
-        <div class="demarcation" style="border: 1px solid #E8E8E8;"></div>
         <div class="article">
             <p class="attraction-description"></p>
             <div>
@@ -73,8 +73,10 @@
             <div class="user__verify-item" data-verify="login">
                 <input type="email" name="email" placeholder="輸入電子信箱" id="login-email">
                 <label for="login-email">輸入電子信箱</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="login">
@@ -82,12 +84,16 @@
                 <label for="login-password">輸入密碼</label>
                 <img src="/static/img/icon_eye.png" class="user__eye" alt="">
                 <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <input type="submit" value="登入帳戶">
             <div class="user__err-message">
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
                 <span id="login-message"></span>
             </div>
             <a>還沒有帳戶？點此註冊</a>
@@ -98,15 +104,19 @@
             <div class="user__verify-item" data-verify="signup">
                 <input type="text" name="name" placeholder="輸入姓名" id="signup-name">
                 <label for="signup-name">輸入姓名</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="signup">
                 <input type="email" name="email" placeholder="輸入電子郵件" id="signup-email">
                 <label for="signup-email">輸入電子郵件</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="signup">
@@ -114,12 +124,16 @@
                 <label for="signup-password">輸入密碼</label>
                 <img src="/static/img/icon_eye.png" class="user__eye" alt="">
                 <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <input type="submit" value="註冊新帳戶">
             <div class="user__err-message">
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
                 <span id="signup-message"></span>
             </div>
             <a>已經有帳戶了？點此登入</a>
@@ -129,7 +143,7 @@
     <div class="footer">
         <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
     </div>
-    <script src="/static/js/common.js"></script>
-    <script src="/static/js/attraction.js"></script>
+    <script type="module" src="/static/js/common.js"></script>
+    <script type="module" src="/static/js/attraction.js"></script>
 </body>
 </html>
