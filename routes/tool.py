@@ -11,7 +11,6 @@ class Tool:
 
     def check_int(self, number):
         try:
-            print(type(number))
             if type(number) == int:
                 return True
             elif type(number) == float:

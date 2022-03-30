@@ -54,7 +54,6 @@ def user_post():
     result = user_model.query({
         "email": email
     })
-    print(result)
     if result["status"] == "ok" and result["count"] > 0:
         user_view.set_reponse(False, "註冊失敗，重複的 Email 或其他原因", 400)
         return user_view.render(None)
@@ -65,7 +64,6 @@ def user_post():
         "email": email,
         "password": password
     })
-    print(result)
     return user_view.render(result)
 
 # 登入
@@ -87,7 +85,6 @@ def user_patch():
         "password": password
     })
     resp = make_response(user_view.render(result))
-    print(resp)
     # 將使用者資訊寫入 cookie
     if user_view.token_data:
         token = make_token(user_view.token_data)
@@ -132,7 +129,6 @@ def login_data_check(name, email, password):
         return False
     
     # 檢核 email 格式
-    print(config.email_regex)
     if not re.match(config.email_regex, email):
         return False 
 

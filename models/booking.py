@@ -6,7 +6,6 @@ class BookingMouel():
 
     def insert(self, data):
         command = "INSERT INTO booking (" + ", ".join(data) + ") VALUES (" + ", ".join(["%(" + k + ")s" for k in data.keys()]) + ");"
-        print("command:", command, data)
         return DB_model.insert(command, [data])
 
     def query_by_userid(self, data):
@@ -27,7 +26,6 @@ class BookingMouel():
 
     def delete_by_userid(self, data):
         command = "DELETE FROM booking WHERE " + " AND ".join([k + "= %(" + k + ")s" for k in data.keys()]) + ";"
-        print("delete command:", command, data)
         return DB_model.delete(command, data)
 
 booking_model = BookingMouel(DB_model)
