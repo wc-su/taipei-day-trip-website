@@ -92,7 +92,7 @@ def user_patch():
     if user_view.token_data:
         token = make_token(user_view.token_data)
         resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1), httponly = True)
-        resp.headers["Authorization"] = "Bearer " + token
+        # resp.headers["Authorization"] = "Bearer " + token
     return resp
 
 # 登出
