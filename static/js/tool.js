@@ -44,6 +44,7 @@ function setloadingWidth(loading) {
     return width[0];
 }
 export function stopLoading(intervalId) {
+    window.clearInterval(intervalId);
     const loading = document.querySelector(".loading-banner");
     loading.classList.add("loading-banner--stop");
 }

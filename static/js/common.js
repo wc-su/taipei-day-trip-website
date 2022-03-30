@@ -281,8 +281,8 @@ userLogin.addEventListener("click", (e) => {
         if(isValid("login")) {
             const loadingIntervalId = setLoading();
             patchUser().then(result => {
+                stopLoading(loadingIntervalId);
                 if(result["ok"]) {
-                    stopLoading(loadingIntervalId);
                     if(loginPosition) {
                         if(loginPosition.position == "common") {
                             // 點擊預定行程做登入，導向 booking 頁面
