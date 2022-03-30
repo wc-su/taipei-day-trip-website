@@ -1,5 +1,5 @@
 import { regexEmail } from "./config.js";
-import { fetchAPI } from "./tool.js";
+import { fetchAPI, setLoading, stopLoading } from "./tool.js";
 
 // * -------------- *
 // |     model      |
@@ -260,7 +260,9 @@ navMenu.addEventListener("click", (e) => {
                 resetUserContainer("login");
                 break;
             case "logout":
+                const loadingIntervalId = setLoading();
                 userLogout().then(result => {
+                    stopLoading(loadingIntervalId);
                     if(result["ok"]) {
                         window.location.reload();
                         return;
@@ -277,11 +279,12 @@ userLogin.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("login")) {
+            const loadingIntervalId = setLoading();
             patchUser().then(result => {
                 if(result["ok"]) {
+                    stopLoading(loadingIntervalId);
                     if(loginPosition) {
                         if(loginPosition.position == "common") {
-                            console.log("this");
                             // 點擊預定行程做登入，導向 booking 頁面
                             window.location.assign("/booking");
                             return;
@@ -311,8 +314,10 @@ userSignup.addEventListener("click", (e) => {
     const target = e.target;
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
-        if(isValid("signup")){
+        if(isValid("signup")) {
+            const loadingIntervalId = setLoading();
             postUser().then(result => {
+                stopLoading(loadingIntervalId);
                 if(result["ok"]) {
                     console.log("this1");
                     renderMessage("註冊成功", signupMessage, false);

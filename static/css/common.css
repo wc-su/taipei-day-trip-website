@@ -281,6 +281,17 @@ body {
     padding: 44px 0;
 }
 
+.loading-banner {
+    background-color: rgba(68, 136, 153, 0.8);
+    position: fixed; top: 0; left: 0;
+    width: 0%; height: 3px;
+    z-index: 20;
+}
+.loading-banner--stop {
+    width: 100%;
+    transition: width 0.3s;
+}
+
 @media (max-width: 1200px) {
     .logo > a {
         padding: 12px 0 12px 20px;

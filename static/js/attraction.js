@@ -1,4 +1,4 @@
-import { fetchAPI, formatDate } from "./tool.js"
+import { fetchAPI, formatDate, setLoading, stopLoading } from "./tool.js"
 import { renderUserWrap, resetUserContainer, initCommon, user } from "./common.js"
 
 // * -------------- *
@@ -172,8 +172,10 @@ async function init() {
 }
 
 async function addBooking() {
+    const loadingIntervalId = setLoading();
     const result = await addbookingToDB();
     renderBooking(result);
+    stopLoading(loadingIntervalId);
 }
 
 window.addEventListener("DOMContentLoaded", () => {

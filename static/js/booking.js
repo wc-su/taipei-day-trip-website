@@ -1,4 +1,4 @@
-import { fetchAPI } from "./tool.js"
+import { fetchAPI, setLoading, stopLoading } from "./tool.js"
 import { initCommon, user } from "./common.js"
 
 // * -------------- *
@@ -96,8 +96,10 @@ async function initBooking() {
 }
 
 async function deleteBooking() {
+    const loadingIntervalId = setLoading();
     const result = await deleteBookingInfo();
-    renderDeleteBooking(result)
+    renderDeleteBooking(result);
+    stopLoading(loadingIntervalId);
 }
 
 // event
