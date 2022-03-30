@@ -5,7 +5,7 @@ from routes.config import Config
 from models.connectDB import DBModel
 
 # 連線到資料庫
-config = Config()
+config = Config(12)
 config.get_env_config("../")
 initDB_model = DBModel("mypool", 1, config.db_settings)
 if not initDB_model.is_connected():
