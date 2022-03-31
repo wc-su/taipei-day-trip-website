@@ -8,20 +8,18 @@ import { renderUserWrap, resetUserContainer, initCommon, user } from "./common.j
 let attraction = null;
 
 async function getAttraction() {
-    await fetchAPI(`${window.location.pathname}`, "GET")
-    .then(result => {
-        // API 回傳失敗
-        if(result.error) {
-            return;
-        }
-        // 取得景點資訊
-        attraction = result.data;
-    });
+    const result = await fetchAPI(`${window.location.pathname}`, "GET")
+    // API 回傳失敗
+    if(result.error) {
+        return;
+    }
+    // 取得景點資訊
+    attraction = result.data;
 }
 
-async function addbookingToDB() {
+function addbookingToDB() {
     // 呼叫 api，將預定行程寫入資料庫
-    return await fetchAPI("/booking", "POST",
+    return fetchAPI("/booking", "POST",
         { "content-type": "application/json" },
         {
             "attractionId": attraction.id,

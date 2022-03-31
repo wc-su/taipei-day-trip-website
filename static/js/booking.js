@@ -6,11 +6,11 @@ import { initCommon, user } from "./common.js"
 // * -------------- *
 let bookingInfo = null;
 
-async function deleteBookingInfo() {
-    return await fetchAPI("/booking", "delete").then(result => { return result });
+function deleteBookingInfo() {
+    return fetchAPI("/booking", "delete");
 }
 async function getBookingInfo() {
-    await fetchAPI("/booking", "GET").then(result => bookingInfo = result);
+    bookingInfo = await fetchAPI("/booking", "GET");
 }
 
 // * -------------- *

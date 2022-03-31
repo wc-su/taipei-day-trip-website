@@ -238,6 +238,9 @@ body {
 .user__err-message--valid > .user__message-accept {
     height: 14px;
 }
+.user__err-message > span {
+    color: green;
+}
 
 
 .user__verify-item > .user__eye,

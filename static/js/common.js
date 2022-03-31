@@ -7,13 +7,16 @@ import { fetchAPI, setLoading, stopLoading } from "./tool.js";
 export let user = null;
 
 async function getUserData() {
-    await fetchAPI("/user", "GET").then((result) => { if(result.data) { user = result.data; }});
+    const result = await fetchAPI("/user", "GET");
+    if(result.data) {
+        user = result.data;
+    }
 }
-async function userLogout() {
-    return await fetchAPI("/user", "DELETE", { "content-type": "application/json" });
+function userLogout() {
+    return fetchAPI("/user", "DELETE", { "content-type": "application/json" });
 }
-async function patchUser() {
-    return await fetchAPI("/user", "PATCH",
+function patchUser() {
+    return fetchAPI("/user", "PATCH",
         { "content-type": "application/json" },
         {
             email: loginEmail.value,
@@ -21,8 +24,8 @@ async function patchUser() {
         }, true
     );
 }
-async function postUser() {
-    return await fetchAPI("/user", "POST",
+function postUser() {
+    return fetchAPI("/user", "POST",
         { "content-type": "application/json" },
         {
             name: signupName.value,
