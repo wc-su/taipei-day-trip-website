@@ -88,11 +88,13 @@ function renderDeleteBooking(result) {
 const submitOrder = document.querySelector(".price-check__submit");
 
 async function initBooking() {
+    const loadingIntervalId = setLoading();
     await initCommon();
     renderUserLogin();
     
     await getBookingInfo();
     renderInit();
+    stopLoading(loadingIntervalId);
 }
 
 async function deleteBooking() {

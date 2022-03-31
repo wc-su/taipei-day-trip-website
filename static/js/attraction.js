@@ -154,11 +154,13 @@ const tourDate = document.querySelector(".tour__date");
 
 
 async function init() {
+    const loadingIntervalId = setLoading();
     await initCommon();
     await getAttraction();
     // 載入畫面
     renderInit();
-    
+    stopLoading(loadingIntervalId);
+
     // 若是由 submit(未登入)跳回，直接執行 submit 預定行程
     const localData = localStorage.getItem("data-position");
     localStorage.removeItem("data-position");
