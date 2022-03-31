@@ -41,7 +41,7 @@ export function formatDate(date) {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 }
 
-const loadingLimit = 90;
+const loadingLimit = 80;
 let groupSize = 0;
 let intervalId = null;
 let hasLoading = false;
