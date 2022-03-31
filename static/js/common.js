@@ -1,9 +1,45 @@
-const navMenu = document.querySelector(".menu");
+import { regexEmail } from "./config.js";
+import { fetchAPI, setLoading, stopLoading } from "./tool.js";
+
+// * -------------- *
+// |     model      |
+// * -------------- *
+export let user = null;
+
+async function getUserData() {
+    await fetchAPI("/user", "GET").then((result) => { if(result.data) { user = result.data; }});
+}
+async function userLogout() {
+    return await fetchAPI("/user", "DELETE", { "content-type": "application/json" });
+}
+async function patchUser() {
+    return await fetchAPI("/user", "PATCH",
+        { "content-type": "application/json" },
+        {
+            email: loginEmail.value,
+            password: loginPassword.value
+        }, true
+    );
+}
+async function postUser() {
+    return await fetchAPI("/user", "POST",
+        { "content-type": "application/json" },
+        {
+            name: signupName.value,
+            email: signupEmail.value,
+            password: signupPassword.value
+        }
+    );
+}
+
+// * -------------- *
+// |      view      |
+// * -------------- *
 const itemLogin = document.querySelector("#item-login");
 const itemLogout = document.querySelector("#item-logout");
+
 // 登入/註冊事件
 const userWrap = document.querySelector(".user-wrap");
-const userContainer = document.querySelector(".user-container");
 
 const userLogin = document.querySelector("#user-login");
 const loginEmail = document.querySelector("#login-email");
@@ -16,175 +52,160 @@ const signupEmail = document.querySelector("#signup-email");
 const signupPassword = document.querySelector("#signup-password");
 const signupMessage = document.querySelector("#signup-message");
 
-// 頁面初始
-window.addEventListener("DOMContentLoaded", () => {
-    fetchUserAPI("GET").then(result => {
-        if(result.data) {
-            itemLogout.parentElement.classList.remove("menu__item--inactive");
-        } else {
-            itemLogin.parentElement.classList.remove("menu__item--inactive");
-        }
-    });
-});
-navMenu.addEventListener("click", (e) => {
-    if(e.target.nodeName == "A") {
-        e.preventDefault();
-        switch(e.target.getAttribute("data-menu")) {
-            case "booking":
-                break;
-            case "login":
-                userWrap.classList.remove("user-wrap--inactive");
-                userWrap.classList.add("user-wrap--active");
-                // 預設顯示登入畫面
-                renderUserWrap("login");
-                break;
-            case "logout":
-                fetchUserAPI(
-                    "DELETE",
-                    { "content-type": "application/json" }
-                ).then(result => {
-                    if(result["ok"]) {
-                        window.location.reload();
-                    } else {
-                        console.log("delete fail");
-                    }
-                });
-                break;
-        }
+function renderMenu() {
+    if(user) {
+        itemLogout.parentElement.classList.remove("menu__item--inactive");
+    } else {
+        itemLogin.parentElement.classList.remove("menu__item--inactive");
     }
-});
-// 移除 form 預設事件
-userWrap.addEventListener("click", event => event.preventDefault());
-userWrap.addEventListener("mousedown", exitUserWrap);
-userWrap.addEventListener("touchstart", exitUserWrap);
-
-userLogin.addEventListener("click", (e) => {
-    if(e.target.nodeName == "INPUT" && e.target.type == "submit") {
-        if(isValid("login")) {
-            fetchUserAPI(
-                "PATCH",
-                { "content-type": "application/json" },
-                {
-                    email: loginEmail.value,
-                    password: loginPassword.value
-                }
-            ).then(result => {
-                if(result["ok"]) {
-                    window.location.reload();
-                } else {
-                    loginMessage.textContent = result["message"];
-                    loginMessage.parentElement.classList.add("user__err-message--active");
-                    loginMessage.parentElement.classList.remove("user__err-message--valid");
-                    loginMessage.parentElement.classList.add("user__err-message--invalid");
-                }
-            });
-        }
+}
+function renderMessage(message, element, errFlag) {
+    element.textContent = message;
+    if(errFlag) {
+        element.parentElement.classList.remove("user__err-message--valid");
+        element.parentElement.classList.add("user__err-message--invalid");
+    } else {
+        element.parentElement.classList.add("user__err-message--valid");
+        element.parentElement.classList.remove("user__err-message--invalid");
     }
-    if(e.target.nodeName == "A") {
-        // 改顯示註冊畫面
-        renderUserWrap("signup");
-        // 清除畫面資料
-        resetUserContainer(userLogin);
+}
+function changePasswordVisible(target) {
+    // 密碼輸入框 調整為顯碼
+    if(target.nodeName == "IMG" && target.classList.contains("user__eye-close")) {
+        const inputPassword = target.parentElement.querySelector("input[type='password']");
+        inputPassword.type = "text";
+        inputPassword.parentElement.classList.add("user__password--visible");
     }
-});
-userSignup.addEventListener("click", (e) => {
-    if(e.target.nodeName == "INPUT" && e.target.type == "submit") {
-        if(isValid("signup")){
-            fetchUserAPI(
-                "POST",
-                { "content-type": "application/json" },
-                {
-                    name: signupName.value,
-                    email: signupEmail.value,
-                    password: signupPassword.value
-                }
-            ).then(result => {
-                if(result["ok"]) {
-                    signupMessage.textContent = "註冊成功";
-                    signupMessage.parentElement.classList.remove("user__err-message--active");
-                    signupMessage.parentElement.classList.add("user__err-message--valid");
-                    signupMessage.parentElement.classList.remove("user__err-message--invalid");
-                } else {
-                    signupMessage.textContent = result["message"];
-                    signupMessage.parentElement.classList.add("user__err-message--active");
-                    signupMessage.parentElement.classList.remove("user__err-message--valid");
-                    signupMessage.parentElement.classList.add("user__err-message--invalid");
-                }
-            });
-        }
+    // 密碼輸入框 調整為隱碼
+    if(target.nodeName == "IMG" && target.classList.contains("user__eye")) {
+        const inputPassword = target.parentElement.querySelector("input[type='text']");
+        inputPassword.type = "password";
+        inputPassword.parentElement.classList.remove("user__password--visible");
     }
-    if(e.target.nodeName == "A") {
-        // 改顯示登入畫面
-        renderUserWrap("login");
-        // 清除畫面資料
-        resetUserContainer(userSignup);
-    }
-});
-
+}
 // UserWrap 要顯示畫面 (login / signup)
-function renderUserWrap(type="default") {
+export function renderUserWrap(type="default") {
+    loginPosition = JSON.parse(localStorage.getItem("data-position"));
+    localStorage.removeItem("data-position");
     switch(type) {
         case "login":
+            userWrap.classList.remove("user-wrap--inactive");
+            userWrap.classList.add("user-wrap--active");
             userLogin.classList.add("user-container--active");
             userSignup.classList.remove("user-container--active");
+            loginEmail.focus();
             break;
         case "signup":
+            userWrap.classList.remove("user-wrap--inactive");
+            userWrap.classList.add("user-wrap--active");
             userLogin.classList.remove("user-container--active");
             userSignup.classList.add("user-container--active");
+            signupName.focus();
             break;
         default:
+            userWrap.classList.add("user-wrap--inactive");
+            userWrap.classList.remove("user-wrap--active");
             userLogin.classList.remove("user-container--active");
             userSignup.classList.remove("user-container--active");
             break;
     }
 }
+function renderInput(parent, checkResult) {
+    const message = parent.querySelector(".user__input-message > span");
+    message.textContent = checkResult;
+    if(checkResult) {
+        // input 加上效果
+        parent.classList.add("user__verify-item--invalid");
+        parent.classList.remove("user__verify-item--valid");
+        // 訊息 加上效果
+        message.textContent = checkResult;
+        message.parentElement.classList.add("user__input-message--invalid");
+        message.parentElement.classList.remove("user__input-message--valid");
+    } else {
+        // input 移除效果
+        parent.classList.remove("user__verify-item--invalid");
+        parent.classList.add("user__verify-item--valid");
+        // 訊息 加上效果
+        message.textContent = "驗證成功";
+        message.parentElement.classList.remove("user__input-message--invalid");
+        message.parentElement.classList.add("user__input-message--valid");
+    }
+}
+export function resetUserContainer(resetArea) {
+    const resetUserWrap = document.querySelector(`#user-${resetArea}`);
+    const resetList = resetUserWrap.querySelectorAll("div.user__verify-item");
+    for(const resetItem of resetList) {
+        // 清除輸入框效果
+        resetItem.classList.remove("user__verify-item--invalid");
+        resetItem.classList.remove("user__verify-item--valid");
+        // 清除 input value
+        const input = resetItem.querySelector("input");
+        input.value = "";
+        // 密碼輸入框調整 type=password
+        const inputPassword = resetItem.querySelector("input[name='password']");
+        if(inputPassword) {
+            inputPassword.type = "password";
+            resetItem.classList.remove("user__password--visible");
+        }
+        // 移除訊息效果
+        const messageArea = resetItem.querySelector(".user__input-message");
+        messageArea.classList.remove("user__input-message--invalid");
+        messageArea.classList.remove("user__input-message--valid");
+    }
+    // 清除提示訊息
+    const validMsg = resetUserWrap.querySelector(".user__err-message--valid");
+    if(validMsg) {
+        validMsg.classList.remove("user__err-message--valid");
+        validMsg.children[0].textContent = "";
+    }
+    const invalidMsg = resetUserWrap.querySelector(".user__err-message--invalid");
+    if(invalidMsg) {
+        invalidMsg.classList.remove("user__err-message--invalid");
+        invalidMsg.children[0].textContent = "";
+    }
+}
 
+// * -------------- *
+// |   controller   |
+// * -------------- *
+let loginPosition = null;
+
+const navMenu = document.querySelector(".menu");
+
+// 頁面初始
+export async function initCommon() {
+    await getUserData();
+    renderMenu();
+}
 function exitUserWrap(event) {
     const target = event.target;
     if((target.nodeName == "DIV" && target.classList.contains("user-wrap"))
     || (target.nodeName == "IMG" && target.classList.contains("user__close"))) {
-        userWrap.classList.add("user-wrap--inactive");
-        userWrap.classList.remove("user-wrap--active");
-        renderUserWrap();
         // 清除畫面資料
-        resetUserContainer(userLogin);
-        resetUserContainer(userSignup);
+        resetUserContainer("login");
+        resetUserContainer("signup");
+        renderUserWrap();
     }
 }
-
-async function fetchUserAPI(methods, headers={}, body=null) {
-    if(body) {
-        body = JSON.stringify(body);
-    }
-    return fetch("/api/user", {
-        method: methods,
-        headers: headers,
-        body: body
-    }).then((response) => {
-        return response.json()
-    }).then((result) => {
-        return result;
-    })
-}
-
 function isValid(checkArea) {
-    let valid = true;
+    let isValid = true;
     const checkList = document.querySelectorAll(`[data-verify=${checkArea}]`);
     for(const checkItem of checkList) {
+        if(checkItem.classList.contains("user__verify-item--invalid")) {
+            isValid = false;
+            continue;
+        }
         const input = checkItem.querySelector("input");
-        const result = checkData(input.name, input.value);
-        const messageArea = checkItem.querySelector(".user__err-message");
-        messageArea.children[0].textContent = result;
-        if(result) {
-            valid = false;
-            checkItem.classList.add("user__verify-item--invalid");
-        } else {
-            checkItem.classList.remove("user__verify-item--invalid");
+        // 驗證欄位
+        const checkResult = checkData(input.name, input.value);
+        // 顯示驗證訊息
+        renderInput(checkItem, checkResult);
+        if(checkResult) {
+            isValid = false;
         }
     }
-    return valid;
+    return isValid;
 }
-
 function checkData(inputName, inputValue) {
     switch(inputName) {
         case "name":
@@ -196,10 +217,9 @@ function checkData(inputName, inputValue) {
             if(!inputValue) {
                 return  "電子信箱不可為空白";
             }
-            // 之後再調整和後端一致
-            // if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValue))) {
-            //     return  "電子信箱格式錯誤";
-            // }
+            if (!regexEmail.test(inputValue)) {
+                return  "電子信箱格式錯誤";
+            }
             break;
         case "password":
             if(!inputValue) {
@@ -216,24 +236,114 @@ function checkData(inputName, inputValue) {
     return "";
 }
 
-function resetUserContainer(resetArea) {
-    const resetList = resetArea.querySelectorAll("div.user__verify-item");
-    for(const resetItem of resetList) {
-        // 清除輸入框效果
-        resetItem.classList.remove("user__verify-item--invalid");
-        // 清除 input value
-        const input = resetItem.querySelector("input");
-        input.value = "";
+navMenu.addEventListener("click", (e) => {
+    if(e.target.nodeName == "A") {
+        e.preventDefault();
+        switch(e.target.getAttribute("data-menu")) {
+            case "booking":
+                if(user) {
+                    window.location.assign("/booking");
+                    return;
+                } else {
+                    localStorage.setItem("data-position", JSON.stringify({
+                        "position": "common",
+                        "value": null
+                    }));
+                    // 預設顯示登入畫面
+                    renderUserWrap("login");
+                    resetUserContainer("login");
+                }
+                break;
+            case "login":
+                // 預設顯示登入畫面
+                renderUserWrap("login");
+                resetUserContainer("login");
+                break;
+            case "logout":
+                const loadingIntervalId = setLoading();
+                userLogout().then(result => {
+                    stopLoading(loadingIntervalId);
+                    if(result["ok"]) {
+                        window.location.reload();
+                        return;
+                    } else {
+                        console.log("delete fail");
+                    }
+                });
+                break;
+        }
     }
-    // 清除提示訊息
-    const validMsg = resetArea.querySelector(".user__err-message--valid");
-    if(validMsg) {
-        validMsg.classList.remove("user__err-message--valid");
-        validMsg.children[0].textContent = "";
+});
+userLogin.addEventListener("click", (e) => {
+    const target = e.target;
+    if(target.nodeName == "INPUT" && target.type == "submit") {
+        e.preventDefault();
+        if(isValid("login")) {
+            const loadingIntervalId = setLoading();
+            patchUser().then(result => {
+                stopLoading(loadingIntervalId);
+                if(result["ok"]) {
+                    if(loginPosition) {
+                        if(loginPosition.position == "common") {
+                            // 點擊預定行程做登入，導向 booking 頁面
+                            window.location.assign("/booking");
+                            return;
+                        } else if(loginPosition.position == "attraction") {
+                            localStorage.setItem("data-position", JSON.stringify(loginPosition));
+                        }
+                    }
+                    // 當前頁面重新整理
+                    window.location.reload();
+                    return;
+                } else {
+                    renderMessage(result["message"], loginMessage, true);
+                }
+            });
+        }
     }
-    const invalidMsg = resetArea.querySelector(".user__err-message--invalid");
-    if(invalidMsg) {
-        invalidMsg.classList.remove("user__err-message--invalid");
-        invalidMsg.children[0].textContent = "";
+    if(target.nodeName == "A") {
+        e.preventDefault();
+        // 改顯示註冊畫面
+        renderUserWrap("signup");
+        // 清除畫面資料
+        resetUserContainer("login");
     }
-}
+    changePasswordVisible(target);
+});
+userSignup.addEventListener("click", (e) => {
+    const target = e.target;
+    if(target.nodeName == "INPUT" && target.type == "submit") {
+        e.preventDefault();
+        if(isValid("signup")) {
+            const loadingIntervalId = setLoading();
+            postUser().then(result => {
+                stopLoading(loadingIntervalId);
+                if(result["ok"]) {
+                    console.log("this1");
+                    renderMessage("註冊成功", signupMessage, false);
+                } else {
+                    renderMessage(result["message"], signupMessage, true);
+                }
+            });
+        }
+    }
+    if(target.nodeName == "A") {
+        e.preventDefault();
+        // 改顯示登入畫面
+        renderUserWrap("login");
+        // 清除畫面資料
+        resetUserContainer("signup");
+    }
+    changePasswordVisible(target);
+});
+userWrap.addEventListener("focusout", (event) => {
+    const target = event.target;
+    if(target.nodeName == "INPUT" && target.type != "submit") {
+        // 驗證欄位
+        const checkResult = checkData(target.name, target.value);
+        // 顯示驗證訊息
+        renderInput(target.parentElement, checkResult);
+    }
+});
+userWrap.addEventListener("mousedown", exitUserWrap);
+userWrap.addEventListener("touchstart", exitUserWrap);

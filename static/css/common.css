@@ -6,14 +6,10 @@
 @import "reset.css";
 
 body {
-    /* background: #EFF3F5; */
+    color: #666666;
     background: #FFFFFF;
     font-family: 'Noto Sans TC', sans-serif;
     line-height: 1;
-    /* footer 放置在畫面底部 */
-    display: flex; flex-direction: column;
-    min-height: 100vh;
-    color: #666666;
     /* login / signup area */
     position: relative;
 }
@@ -119,21 +115,12 @@ body {
     margin: 0 0 18px 0;
 }
 .user-container input {
+    width: 100%;
+    min-width: 200px;
     border-radius: 5px;
     padding: 15px;
 }
-.user-container input:not(input[type="submit"]) {
-    border: 1px solid #CCCCCC;
-}
-.user-container input[type="submit"] {
-    color: #FFFFFF;
-    font-size: 19px;
-    background: #448899;
-    border: none;
-    cursor: pointer;
-}
 .user__verify-item {
-    display: grid; gap: 10px;
     position: relative;
 }
 .user__verify-item > label {
@@ -152,53 +139,126 @@ body {
     font-size: 14px;
     padding: 0 5px;
 }
+.user__verify-item > input:not(input[type="submit"]) {
+    border: 1px solid #CCCCCC;
+}
+.user__verify-item > input:not(input[type="submit"]):focus {
+    outline: none;
+    border-width: 2px;
+    border-color: rgba(0, 0, 255, 0.6);
+}
+.user__verify-item.user__verify-item--invalid > input:not(input[type="submit"]) {
+    border-color: rgba(255, 0, 0, 0.8);
+}
+.user__verify-item.user__verify-item--invalid > input:focus ~ label,
+.user__verify-item.user__verify-item--invalid > input:not(:placeholder-shown) ~ label {
+    color: rgba(255, 0, 0, 0.8);
+}
+.user__verify-item.user__verify-item--valid > input:not(input[type="submit"]) {
+    border-color: green;
+}
+.user__verify-item.user__verify-item--valid > input:focus ~ label,
+.user__verify-item.user__verify-item--valid > input:not(:placeholder-shown) ~ label {
+    color: green;
+}
+.user-container input[type="submit"] {
+    color: #FFFFFF;
+    font-size: 19px;
+    background: #448899;
+    border: none;
+    cursor: pointer;
+}
+
+.user__input-message {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    height: 0;
+    opacity: 0;
+    transition: all 0.5s;
+    font-size: 14px;
+}
+.user__input-message--invalid,
+.user__input-message--valid {
+    margin: 5px 0 10px 0;
+    opacity: 1;
+    height: 14px;
+}
 .user__err-message {
     display: none;
     align-items: center;
     justify-content: center;
+    height: 0;
+}
+.user__input-message > span {
+    color: red;
+    padding-left: 18px;
 }
 .user__err-message > span {
     color: red;
-    padding-left: 16px;
-    position: relative;
+    padding-left: 2px;
 }
-.user__err-message > span::before {
-    content: "\00a0!\00a0";
-    color: #FFFFFF;
-    position: absolute; top: 50%; left: 0;
-    transform: translateY(-50%) scale(0.8);
-    border-radius: 50%;
-    background: red;
+.user__err-message > img {
+    width: 14px; height: 0px;
+    opacity: 1;
 }
-.user__err-message > span::after {
-    display: none;
-    content: "\00a0L\00a0";
-    color: #FFFFFF;
-    position: absolute; top: 50%; left: 0;
-    transform: translateY(-50%) scaleX(-0.8) rotate(-45deg);
-    border-radius: 50%;
-    background: green;
+.user__input-message > img {
+    position: absolute; top: 0; left: 0;
+    width: 14px; height: 0px;
+    opacity: 1;
 }
-.user__verify-item--invalid > input:not(input[type="submit"]) {
-    border-color: red;
+.user__input-message--invalid > span {
+    color: red;
 }
-.user__verify-item--invalid > .user__err-message {
-    display: flex;
-    justify-content: flex-start;
+.user__input-message--valid > span {
+    color: green;
 }
+.user__input-message--invalid > img.user__input-error,
+.user__input-message--valid > img.user__input-accept {
+    height: 14px;
+}
+.user__input-message--valid {
+    margin: 0; opacity: 0; height: 0px;
+    animation: user__input-animation 0.8s;
+}
+@keyframes user__input-animation {
+    0% { margin: 0; opacity: 0; height: 0px; }
+    70% { margin: 5px 0 10px 0; opacity: 1; height: 14px; }
+    100% { margin: 0; opacity: 0; height: 0px; }
+}
+
 .user__err-message--invalid,
 .user__err-message--valid {
     display: flex;
+    height: 14px;
 }
-.user__err-message--valid > span {
-    color: green;
+.user__err-message--invalid > .user__message-error {
+    height: 14px;
 }
-.user__err-message--valid > span::after {
+.user__err-message--valid > .user__message-accept {
+    height: 14px;
+}
+
+
+.user__verify-item > .user__eye,
+.user__verify-item > .user__eye-close {
+    display: none;
+    position: absolute; top: 18px; right: 10px;
+    width: 16px; height: 16px;
+    opacity: 0.3;
+    cursor: pointer;
+}
+.user__verify-item > input[type="password"] ~ .user__eye-close {
     display: block;
 }
-.user__err-message--valid > span::before {
+.user__verify-item.user__password--visible > .user__eye {
+    display: block;
+}
+.user__verify-item.user__password--visible > .user__eye-close {
     display: none;
 }
+
+
 .user-container > a {
     justify-self: center;
     display: block;
@@ -212,13 +272,24 @@ body {
 .footer {
     background :#757575;
     width: 100%;
-    /* footer 放置在畫面底部 */
-    margin-top: auto;
+    /* footer 延伸到畫面底部 */
+    box-shadow: 0 100vh 0 100vh #757575;
 }
 .footer > .copyright {
     color: #FFFFFF;
     text-align: center;
     padding: 44px 0;
+}
+
+.loading-banner {
+    background-color: rgba(68, 136, 153, 0.8);
+    position: fixed; top: 0; left: 0;
+    width: 0%; height: 3px;
+    z-index: 20;
+}
+.loading-banner--stop {
+    width: 100%;
+    transition: width 0.3s;
 }
 
 @media (max-width: 1200px) {

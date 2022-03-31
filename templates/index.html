@@ -13,7 +13,7 @@
         <div class="nav__container">
             <h1 class="logo"><a href="/">台北一日遊</a></h1>
             <ul class="menu">
-                <li class="menu__item"><a data-menu="booking" href="/">預定行程</a></li>
+                <li class="menu__item"><a data-menu="booking" href="/booking">預定行程</a></li>
                 <li class="menu__item menu__item--inactive"><a data-menu="login" href="/" id="item-login">登入/註冊</a></li>
                 <li class="menu__item menu__item--inactive"><a data-menu="logout" href="/" id="item-logout">登出系統</a></li>
             </ul>
@@ -41,19 +41,27 @@
             <div class="user__verify-item" data-verify="login">
                 <input type="email" name="email" placeholder="輸入電子信箱" id="login-email">
                 <label for="login-email">輸入電子信箱</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="login">
                 <input type="password" name="password" placeholder="輸入密碼" id="login-password">
                 <label for="login-password">輸入密碼</label>
-                <div class="user__err-message">
+                <img src="/static/img/icon_eye.png" class="user__eye" alt="">
+                <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <input type="submit" value="登入帳戶">
             <div class="user__err-message">
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
                 <span id="login-message"></span>
             </div>
             <a>還沒有帳戶？點此註冊</a>
@@ -64,27 +72,37 @@
             <div class="user__verify-item" data-verify="signup">
                 <input type="text" name="name" placeholder="輸入姓名" id="signup-name">
                 <label for="signup-name">輸入姓名</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="signup">
                 <input type="email" name="email" placeholder="輸入電子郵件" id="signup-email">
                 <label for="signup-email">輸入電子郵件</label>
-                <div class="user__err-message">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <div class="user__verify-item" data-verify="signup">
                 <input type="password" name="password" placeholder="輸入密碼" id="signup-password">
                 <label for="signup-password">輸入密碼</label>
-                <div class="user__err-message">
+                <img src="/static/img/icon_eye.png" class="user__eye" alt="">
+                <img src="/static/img/icon_eye_close.png" class="user__eye-close" alt="">
+                <div class="user__input-message">
                     <span></span>
+                    <img src="/static/img/icon_error.png" alt="" class="user__input-error">
+                    <img src="/static/img/icon_accept.png" alt="" class="user__input-accept">
                 </div>
             </div>
             <input type="submit" value="註冊新帳戶">
             <div class="user__err-message">
-                <span id="signup-message">XXXX</span>
+                <img src="/static/img/icon_error.png" alt="" class="user__message-error">
+                <img src="/static/img/icon_accept.png" alt="" class="user__message-accept">
+                <span id="signup-message"></span>
             </div>
             <a>已經有帳戶了？點此登入</a>
             <img class="user__close" src="/static/img/icon_close.png" alt="">
@@ -93,7 +111,7 @@
     <div class="footer">
         <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
     </div>
-    <script src="/static/js/common.js"></script>
-    <script src="/static/js/index.js"></script>
+    <script type="module" src="/static/js/common.js"></script>
+    <script type="module" src="/static/js/index.js"></script>
 </body>
 </html>

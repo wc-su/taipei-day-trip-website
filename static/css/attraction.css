@@ -120,6 +120,9 @@ input[type="date"].tour__date {
 input[type="date"].tour__date:focus {
     outline: none;
 }
+input[type="date"].tour__date--error {
+    border: 1px solid red;
+}
 .tour__form > .tour__radio-container > input[type="radio"] {
     -webkit-appearance: none;
     appearance: none;
@@ -148,7 +151,14 @@ input[type="date"].tour__date:focus {
     border-radius: 5px;
     cursor: pointer;
     padding: 10px 20px;
-    margin: 25px 0;
+    margin-top: 25px;
+}
+.tour__message {
+    display: none;
+}
+.tour__message.tour__message--visible {
+    display: block;
+    color: red;
 }
 
 
@@ -156,7 +166,8 @@ input[type="date"].tour__date:focus {
     display: grid;
     gap: 32px;
     line-height: 1.8;
-    margin: 50px 10px;
+    border-top: 1px solid #E8E8E8;
+    padding: 50px 10px;
 }
 
 

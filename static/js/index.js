@@ -1,25 +1,14 @@
+import { initCommon } from "./common.js";
+import { fetchAPI } from "./tool.js";
+
 // * -------------- *
 // |     model      |
 // * -------------- *
 let attractionsData = null;
-let userStatusData = null;
 
 // 取得旅遊景點資訊
 async function getAttractions(url) {
-    return fetch(url)
-    .then((response) => {
-        return response.json()
-    }).then((data) => {
-        attractionsData = data;
-    });
-}
-async function chkUserStatus(url) {
-    return fetch(url)
-    .then((response) => {
-        return response.json()
-    }).then((data) => {
-        userStatusData = data;
-    });
+    await fetchAPI(url, "GET").then(result => attractionsData = result);
 }
 
 // * -------------- *
@@ -97,9 +86,6 @@ function renderAttractions() {
         observer.unobserve(attractions_observer);
     }
 }
-function renderUser() {
-
-}
 
 // * -------------- *
 // |   controller   |
@@ -131,7 +117,7 @@ async function checkInput() {
 
     // 讀取註記設為 true
     dataLoading = true;
-    let url = `/api/attractions?page=${nextPage}`;
+    let url = `/attractions?page=${nextPage}`;
     // 帶入輸入關鍵字搜尋
     if(hasSearchText && searchText.value.trim() != "") {
         url += `&keyword=${searchText.value.trim()}`;
@@ -142,12 +128,15 @@ async function checkInput() {
     dataLoading = false; 
 }
 
+
+
 // 頁面初始
+window.addEventListener("DOMContentLoaded", () => {
+    initCommon();
+});
 window.addEventListener("load", () => {
     // 設定觀察對象：告訴 observer 要觀察哪個目標元素
     observer.observe(attractions_observer);
-    // 
-    // chkUserStatus("/api/user");
 });
 // 關鍵字搜尋事件
 searchBtn.addEventListener("click", (e) => {
@@ -192,5 +181,6 @@ attractions.addEventListener("click", (e) => {
             id = targetParent.parentElement.getAttribute("data-id");
         }
         window.location.assign(`attraction/${id}`);
+        return;
     }
 });

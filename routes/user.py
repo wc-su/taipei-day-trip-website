@@ -20,6 +20,7 @@ secret_key = config.env_config["JWT_SECRET"]
 @user.route("/", methods=["GET"])
 def user_get():
     # 取得 token
+    get_authToken()
     token = request.cookies.get('authId')
     # 檢核使用者狀態
     result = logincheck(token)
@@ -53,7 +54,6 @@ def user_post():
     result = user_model.query({
         "email": email
     })
-    print(result)
     if result["status"] == "ok" and result["count"] > 0:
         user_view.set_reponse(False, "註冊失敗，重複的 Email 或其他原因", 400)
         return user_view.render(None)
@@ -64,7 +64,6 @@ def user_post():
         "email": email,
         "password": password
     })
-    print(result)
     return user_view.render(result)
 
 # 登入
@@ -86,11 +85,11 @@ def user_patch():
         "password": password
     })
     resp = make_response(user_view.render(result))
-    print(resp)
     # 將使用者資訊寫入 cookie
     if user_view.token_data:
         token = make_token(user_view.token_data)
-        resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1))
+        resp.set_cookie("authId", token, expires=datetime.utcnow() + timedelta(days=1), httponly = True)
+        # resp.headers["Authorization"] = "Bearer " + token
     return resp
 
 # 登出
@@ -130,9 +129,23 @@ def login_data_check(name, email, password):
         return False
     
     # 檢核 email 格式
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    if not re.fullmatch(regex, email):
-        # return False 
-        pass # 之後再調整和前端一致
+    if not re.match(config.email_regex, email):
+        return False 
 
     return True
+
+
+# 需再調整
+def get_authToken():
+    header_auth = request.headers.get("Authorization")
+    # print("header auth token:", header_auth)
+    token = request.cookies.get('authId')
+    header_auth = token
+    return header_auth
+
+def get_userid():
+    token = get_authToken()
+    result = logincheck(token)
+    if result["status"] == "ok":
+        return result["data"]["id"]
+    return None
