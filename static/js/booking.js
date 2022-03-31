@@ -7,10 +7,10 @@ import { initCommon, user } from "./common.js"
 let bookingInfo = null;
 
 function deleteBookingInfo() {
-    return fetchAPI("/booking", "delete");
+    return fetchAPI("/booking", { method: "DELETE" });
 }
 async function getBookingInfo() {
-    bookingInfo = await fetchAPI("/booking", "GET");
+    bookingInfo = await fetchAPI("/booking", { method: "GET" });
 }
 
 // * -------------- *
@@ -88,7 +88,7 @@ function renderDeleteBooking(result) {
 const submitOrder = document.querySelector(".price-check__submit");
 
 async function initBooking() {
-    setLoading(2);
+    setLoading(80, 2);
     await initCommon();
     renderUserLogin();
     
@@ -98,7 +98,7 @@ async function initBooking() {
 }
 
 async function deleteBooking() {
-    setLoading(1);
+    setLoading(80, 1);
     const result = await deleteBookingInfo();
     renderDeleteBooking(result);
     stopLoading();

@@ -8,7 +8,7 @@ let attractionsData = null;
 
 // 取得旅遊景點資訊
 async function getAttractions(url) {
-    attractionsData = await fetchAPI(url, "GET");
+    attractionsData = await fetchAPI(url, { method: "GET" });
 }
 
 // * -------------- *

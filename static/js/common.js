@@ -7,30 +7,40 @@ import { fetchAPI, setLoading, stopLoading } from "./tool.js";
 export let user = null;
 
 async function getUserData() {
-    const result = await fetchAPI("/user", "GET");
+    const result = await fetchAPI("/user", { method: "GET" });
     if(result.data) {
         user = result.data;
     }
 }
 function userLogout() {
-    return fetchAPI("/user", "DELETE", { "content-type": "application/json" });
+    return fetchAPI("/user", { method: "DELETE", headers: { "content-type": "application/json" }});
 }
 function patchUser() {
-    return fetchAPI("/user", "PATCH",
-        { "content-type": "application/json" },
+    return fetchAPI(
+        "/user",
         {
-            email: loginEmail.value,
-            password: loginPassword.value
-        }, true
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                email: loginEmail.value,
+                password: loginPassword.value
+            })
+        },
+        false,
+        true
     );
 }
 function postUser() {
-    return fetchAPI("/user", "POST",
-        { "content-type": "application/json" },
-        {
-            name: signupName.value,
-            email: signupEmail.value,
-            password: signupPassword.value
+    return fetchAPI(
+        "/user",
+        { 
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                name: signupName.value,
+                email: signupEmail.value,
+                password: signupPassword.value
+            })
         }
     );
 }
@@ -263,7 +273,7 @@ navMenu.addEventListener("click", (e) => {
                 resetUserContainer("login");
                 break;
             case "logout":
-                setLoading(1);
+                setLoading(80, 1);
                 userLogout().then(result => {
                     stopLoading();
                     if(result["ok"]) {
@@ -282,7 +292,7 @@ userLogin.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("login")) {
-            setLoading(1);
+            setLoading(80, 1);
             patchUser().then(result => {
                 stopLoading();
                 if(result["ok"]) {
@@ -318,7 +328,7 @@ userSignup.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("signup")) {
-            setLoading(1);
+            setLoading(80, 1);
             postUser().then(result => {
                 stopLoading();
                 if(result["ok"]) {

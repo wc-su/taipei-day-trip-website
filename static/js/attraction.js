@@ -8,7 +8,7 @@ import { renderUserWrap, resetUserContainer, initCommon, user } from "./common.j
 let attraction = null;
 
 async function getAttraction() {
-    const result = await fetchAPI(`${window.location.pathname}`, "GET")
+    const result = await fetchAPI(`${window.location.pathname}`, { method: "GET" });
     // API 回傳失敗
     if(result.error) {
         return;
@@ -19,13 +19,17 @@ async function getAttraction() {
 
 function addbookingToDB() {
     // 呼叫 api，將預定行程寫入資料庫
-    return fetchAPI("/booking", "POST",
-        { "content-type": "application/json" },
+    return fetchAPI(
+        "/booking",
         {
-            "attractionId": attraction.id,
-            "date": tourDate.value,
-            "time": tourRadioArea.querySelector("input[type='radio']:checked").value,
-            "price": tourPrice.textContent
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                "attractionId": attraction.id,
+                "date": tourDate.value,
+                "time": tourRadioArea.querySelector("input[type='radio']:checked").value,
+                "price": tourPrice.textContent
+            })
         }
     );
 }
@@ -152,7 +156,7 @@ const tourDate = document.querySelector(".tour__date");
 
 
 async function init() {
-    setLoading(2);
+    setLoading(80, 2);
     await initCommon();
     await getAttraction();
     // 載入畫面
@@ -172,7 +176,7 @@ async function init() {
 }
 
 async function addBooking() {
-    setLoading(1);
+    setLoading(80, 1);
     const result = await addbookingToDB();
     renderBooking(result);
     stopLoading();
