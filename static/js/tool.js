@@ -54,8 +54,9 @@ export function setLoading(size=1) {
     if(loading == null) {
         loading = document.createElement("div");
         loading.classList.add("loading-banner");
-        loading.classList.remove("loading-banner--stop");
         document.body.appendChild(loading);
+    } else {
+        loading.classList.remove("loading-banner--stop");
     }
     // width 設定為 0%
     loading.style.width = "0%";
