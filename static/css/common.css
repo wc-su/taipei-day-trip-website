@@ -284,14 +284,24 @@ body {
 .loading-banner {
     background-color: rgba(68, 136, 153, 0.8);
     position: fixed; top: 0; left: 0;
-    width: 0%; height: 3px;
+    height: 3px;
     opacity: 1;
     z-index: 20;
+    /* animation */
+    animation-name: loading-slide;
+    animation-duration: 0.5s;
+    animation-direction: reverse;
+    animation-iteration-count: infinite;
+}
+@keyframes loading-slide {
+    from { background-color: rgba(68, 136, 153, 0.8); }
+    to { background-color: rgba(68, 136, 153, 0.5); }
 }
 .loading-banner--stop {
     /* width 由 js 控制 */
     opacity: 0;
-    transition: width 0.5s;
+    transition: all 0.5s;
+    animation-play-state: paused;
 }
 
 

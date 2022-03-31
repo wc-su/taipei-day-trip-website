@@ -154,12 +154,12 @@ const tourDate = document.querySelector(".tour__date");
 
 
 async function init() {
-    const loadingIntervalId = setLoading();
+    setLoading(2);
     await initCommon();
     await getAttraction();
     // 載入畫面
     renderInit();
-    stopLoading(loadingIntervalId);
+    stopLoading();
 
     // 若是由 submit(未登入)跳回，直接執行 submit 預定行程
     const localData = localStorage.getItem("data-position");
@@ -174,10 +174,10 @@ async function init() {
 }
 
 async function addBooking() {
-    const loadingIntervalId = setLoading();
+    setLoading(1);
     const result = await addbookingToDB();
     renderBooking(result);
-    stopLoading(loadingIntervalId);
+    stopLoading();
 }
 
 window.addEventListener("DOMContentLoaded", () => {

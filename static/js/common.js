@@ -260,9 +260,9 @@ navMenu.addEventListener("click", (e) => {
                 resetUserContainer("login");
                 break;
             case "logout":
-                const loadingIntervalId = setLoading();
+                setLoading(1);
                 userLogout().then(result => {
-                    stopLoading(loadingIntervalId);
+                    stopLoading();
                     if(result["ok"]) {
                         window.location.reload();
                         return;
@@ -279,9 +279,9 @@ userLogin.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("login")) {
-            const loadingIntervalId = setLoading();
+            setLoading(1);
             patchUser().then(result => {
-                stopLoading(loadingIntervalId);
+                stopLoading();
                 if(result["ok"]) {
                     if(loginPosition) {
                         if(loginPosition.position == "common") {
@@ -315,9 +315,9 @@ userSignup.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("signup")) {
-            const loadingIntervalId = setLoading();
+            setLoading(1);
             postUser().then(result => {
-                stopLoading(loadingIntervalId);
+                stopLoading();
                 if(result["ok"]) {
                     console.log("this1");
                     renderMessage("註冊成功", signupMessage, false);
