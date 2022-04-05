@@ -15,8 +15,7 @@
 .shopping-bag__container > img {
     width: 60px; height: 60px;
     transform: scale(0) rotate(60deg);
-    box-shadow: 1px 2px 5px gray;
-    /* text-shadow: 1px 2px 5px gray; */
+    box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5), 1px 2px 5px lightgray;
     border-radius: 50%;
     opacity: 0;
 }
