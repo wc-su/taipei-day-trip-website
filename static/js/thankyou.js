@@ -1,5 +1,5 @@
 import { fetchAPI, setLoading, stopLoading } from "./tool.js";
-import { initCommon } from "./common.js";
+import { initCommon, user } from "./common.js";
 
 // * -------------- *
 // |     model      |
@@ -45,6 +45,13 @@ async function initThankyou() {
     setLoading(80, 2);
 
     await initCommon();
+    if(!user) {
+        stopLoading();
+        // 使用者未登入，直接導向首頁
+        window.location.assign("/");
+        return;
+    }
+
     await getOrder();
     renderOrder();
 

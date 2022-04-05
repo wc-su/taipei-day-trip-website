@@ -1,5 +1,5 @@
 import { regexEmail } from "./config.js";
-import { fetchAPI, setLoading, stopLoading } from "./tool.js";
+import { fetchAPI } from "./tool.js";
 
 // * -------------- *
 // |     model      |
@@ -248,6 +248,34 @@ function checkData(inputName, inputValue) {
     // 驗證成功
     return "";
 }
+// loading effect
+function setUserLoading(message) {
+    // 視窗（外容器）
+    const loadingWrap = document.createElement("div");
+    loadingWrap.classList.add("user__loading-wrap");
+    // 視窗（內容器）
+    const loadingContainer = document.createElement("div");
+    loadingContainer.classList.add("user__loading-container");
+    // 文字訊息
+    const loadingMessage = document.createElement("p");
+    loadingMessage.classList.add("user__loading__message");
+    loadingMessage.textContent = message;
+    // loading 特效
+    const loadingCircle = document.createElement("div");
+    loadingCircle.classList.add("user__loading__circle");
+    // 加入 內容器
+    loadingContainer.appendChild(loadingMessage);
+    loadingContainer.appendChild(loadingCircle);
+    // 加入 外容器
+    loadingWrap.appendChild(loadingContainer);
+    // 加入 畫面
+    document.body.appendChild(loadingWrap);
+}
+function stopUserLoading() {
+    // 從畫面移除
+    const loadingWrap = document.querySelector(".user__loading-wrap");
+    document.body.removeChild(loadingWrap);
+}
 
 navMenu.addEventListener("click", (e) => {
     if(e.target.nodeName == "A") {
@@ -273,13 +301,13 @@ navMenu.addEventListener("click", (e) => {
                 resetUserContainer("login");
                 break;
             case "logout":
-                setLoading(80, 1);
+                setUserLoading("登出中，請稍候");
                 userLogout().then(result => {
-                    stopLoading();
                     if(result["ok"]) {
                         window.location.reload();
                         return;
                     } else {
+                        stopUserLoading();
                         console.log("delete fail");
                     }
                 });
@@ -292,9 +320,8 @@ userLogin.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("login")) {
-            setLoading(80, 1);
+            setUserLoading("登入中，請稍候");
             patchUser().then(result => {
-                stopLoading();
                 if(result["ok"]) {
                     if(loginPosition) {
                         if(loginPosition.position == "common") {
@@ -310,6 +337,7 @@ userLogin.addEventListener("click", (e) => {
                     return;
                 } else {
                     renderMessage(result["message"], loginMessage, true);
+                    stopUserLoading();
                 }
             });
         }
@@ -328,11 +356,10 @@ userSignup.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("signup")) {
-            setLoading(80, 1);
+            setUserLoading("註冊中，請稍候");
             postUser().then(result => {
-                stopLoading();
+                stopUserLoading();
                 if(result["ok"]) {
-                    console.log("this1");
                     renderMessage("註冊成功", signupMessage, false);
                 } else {
                     renderMessage(result["message"], signupMessage, true);
