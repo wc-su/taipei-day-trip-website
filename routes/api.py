@@ -71,7 +71,7 @@ def order(orderNumber):
 	# 檢核 query string
 
 	# 查詢資料庫
-	query_result = order_model.query_by_number({ "number": orderNumber })
+	query_result = order_model.query_by_number({ "number": orderNumber, "user_id": user_id })
 	if query_result["status"] == "ok":
 		return order_view.render_query(query_result["data"])
 	else:

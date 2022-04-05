@@ -47,7 +47,6 @@
 }
 .user__loading__circle {
     width: 30px; height: 30px;
-    border-top: 10px solid ;
     border: 6px solid #f3f3f3;
     border-top: 5px solid #448899;
     border-radius: 50%;
