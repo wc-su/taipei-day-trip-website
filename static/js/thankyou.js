@@ -56,6 +56,7 @@ async function initThankyou() {
     renderOrder();
 
     stopLoading();
+    document.querySelector(".main").classList.remove("beforeLoad");
 }
 
 window.addEventListener("load", (e) => {

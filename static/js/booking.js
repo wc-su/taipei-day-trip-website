@@ -107,6 +107,7 @@ async function initBooking() {
     renderInit();
 
     stopLoading();
+    main.classList.remove("beforeLoad");
 }
 async function deleteBooking() {
     setLoading(80, 1);

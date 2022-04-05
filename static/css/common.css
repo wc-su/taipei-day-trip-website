@@ -291,6 +291,23 @@ body {
 }
 
 
+.beforeLoad > * {
+    opacity: 0;
+}
+.beforeLoad::before {
+    content: "";
+    display: block;
+    position: relative; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px;
+    border: 6px solid #f3f3f3;
+    border-top: 5px solid #448899;
+    border-radius: 50%;
+    z-index: 50;
+    opacity: 1;
+    animation: circle-round 1s linear infinite;
+}
+
 
 @media (max-width: 1200px) {
     .logo > a {
