@@ -71,6 +71,7 @@ function renderMenu() {
     } else {
         itemLogin.parentElement.classList.remove("menu__item--inactive");
     }
+    navMenu.classList.add("menu--visible");
 }
 function renderMessage(message, element, errFlag) {
     element.textContent = message;
