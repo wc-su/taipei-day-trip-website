@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-import re
 
 from routes.user import get_userid
 from routes.tool import tool

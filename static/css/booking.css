@@ -101,10 +101,49 @@ input.has-error {
 
 
 .connect__title, .credit-card__title {
-    margin-bottom: 24px;
+    margin-bottom: 9px;
 }
+
 .connect__caution {
     margin-top: 20px;
+}
+
+.card-number-group, .expiration-date-group, .cvc-group {
+    display: flex;
+    align-items: center;
+}
+.tpfield {
+    position: relative;
+    border: 1px solid #E8E8E8; border-radius: 5px;
+    width: 200px; height: 40px;
+    padding: 10px;
+}
+.tpfield::before {
+    content: "";
+    width: 15px; height: 15px;
+    transform: scale(0);
+    transition: transform 0.3s;
+    position: absolute; top: 11px; right: 10px;
+}
+.tappay-field-focus {
+    border-width: 2px;
+}
+.has-error .tpfield {
+    border-color: red;
+}
+.has-error .tpfield::before {
+    background: url(../img/icon_error.png) no-repeat center center;
+    background-size: cover;
+    transform: scale(1);
+}
+
+.has-success .tpfield {
+    border-color: green;
+}
+.has-success .tpfield::before {
+    background: url(../img/icon_accept.png) no-repeat center center;
+    background-size: cover;
+    transform: scale(1);
 }
 
 

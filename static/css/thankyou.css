@@ -1,0 +1,44 @@
+.main {
+    max-width: 1200px;
+    width: 100%;
+    padding: 55px 0;
+    margin: 0 auto;
+}
+
+.shopping-bag__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 45px 45px 40px 55px;
+}
+.shopping-bag__container > img {
+    width: 60px; height: 60px;
+    transform: scale(0) rotate(60deg);
+    box-shadow: 1px 2px 5px gray;
+    /* text-shadow: 1px 2px 5px gray; */
+    border-radius: 50%;
+    opacity: 0;
+}
+.shopping-bag__success-area, .shopping-bag__error-area {
+    display: none;
+}
+
+
+.shopping-bag--success > img, .shopping-bag--error > img {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    transition: all 0.3s;
+}
+
+.shopping-bag--success > .shopping-bag__success-area {
+    display: block;
+    text-align: center;
+}
+
+.shopping-bag--error > .shopping-bag__error-area {
+    display: block;
+}
+.shopping-bag--error > img {
+    content: url("../img/icon_error.png");
+}
