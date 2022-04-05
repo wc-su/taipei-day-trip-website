@@ -1,5 +1,4 @@
 export async function fetchAPI(url, options=null, getAuthToken=false) {
-    // console.log("fetch url:", url, options);
     const response = await fetch(`/api${url}`, options);
     const contentLength = response.headers.get('content-length') || 0;
     let loadedLength = 0;

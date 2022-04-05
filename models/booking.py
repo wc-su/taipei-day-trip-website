@@ -25,7 +25,7 @@ class BookingMouel():
         return DB_model.update(command, data)
 
     def delete_by_userid(self, data):
-        command = "DELETE FROM booking WHERE " + " AND ".join([k + "= %(" + k + ")s" for k in data.keys()]) + ";"
+        command = "DELETE FROM booking WHERE user_id=%(user_id)s;"
         return DB_model.delete(command, data)
 
 booking_model = BookingMouel(DB_model)

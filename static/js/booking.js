@@ -109,12 +109,17 @@ async function initBooking() {
     stopLoading();
     main.classList.remove("beforeLoad");
 }
-async function deleteBooking() {
+async function deleteBooking(orderNumber=null) {
     setLoading(80, 1);
 
     const result = await deleteBookingInfo();
     renderDeleteBooking(result);
-
+    if(orderNumber) {
+        window.location.assign(`/thankyou?number=${orderNumber}`);
+    } else {
+        // 資料庫刪除成功，重新載入 booking 畫面
+        window.location.reload();
+    }
     stopLoading();
 }
 async function getOrdersAndPay(getPrimeResult) {
@@ -151,9 +156,7 @@ async function getOrdersAndPay(getPrimeResult) {
         // 顯示錯誤訊息
     } else {
         // 刪除預定行程
-        await deleteBooking();
-        window.location.assign(`/thankyou?number=${postOrdersResult.data.number}`);
-        return;
+        deleteBooking(postOrdersResult.data.number);
     }
 }
 
@@ -164,8 +167,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 deleteBookingBtn.addEventListener("click", (e) => {
     deleteBooking();
-    // 資料庫刪除成功，重新載入 booking 畫面
-    window.location.reload();
 });
 // 訂單送出
 submitOrder.addEventListener("click", (e) => {
