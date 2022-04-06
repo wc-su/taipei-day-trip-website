@@ -119,7 +119,6 @@ export function onSubmit(event, callback) {
 
     // 確認是否可以 getPrime
     if (tappayStatus.canGetPrime === false) {
-        console.log('can not get prime');
         getPrimeRsult.msg = "can not get prime";
         callback(getPrimeRsult);
         return;
@@ -128,12 +127,10 @@ export function onSubmit(event, callback) {
     // Get prime
     TPDirect.card.getPrime((result) => {
         if (result.status !== 0) {
-            console.log('get prime error ' + result.msg);
             getPrimeRsult.msg = "get prime error " + result.msg;
             callback(getPrimeRsult);
             return;
         }
-        console.log('get prime 成功，prime: ' + result.card.prime);
         getPrimeRsult.error = false;
         getPrimeRsult.prime = result.card.prime;
         getPrimeRsult.msg = result.msg

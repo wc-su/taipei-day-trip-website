@@ -21,6 +21,7 @@
 }
 .shopping-bag__success-area, .shopping-bag__error-area {
     display: none;
+    width: 100%;
 }
 
 
@@ -31,8 +32,9 @@
 }
 
 .shopping-bag--success > .shopping-bag__success-area {
-    display: block;
-    text-align: center;
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 30px;
 }
 
 .shopping-bag--error > .shopping-bag__error-area {
@@ -40,4 +42,102 @@
 }
 .shopping-bag--error > img {
     content: url("../img/icon_error.png");
+}
+
+
+.info-title, .info-subtitle {
+    font-weight: 700;
+}
+.info-title {
+    color: #448899;
+}
+.info-subtitle > * {
+    font-weight: initial;
+}
+.trip-info {
+    display: grid;
+    width: 100%;
+    border-top: 1px solid #E8E8E8;
+    gap: 20px;
+    grid-template-areas:
+        "attraction-img attraction-name attraction-name"
+        "attraction-img date contact-name"
+        "attraction-img time contact-email"
+        "attraction-img attraction-address contact-phone"
+        "attraction-img msg msg";
+    grid-template-columns: 260px 1fr 1fr;
+    padding: 40px 10px;
+}
+.trip-info > .attraction-img {
+    grid-area: attraction-img;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px lightgray;
+}
+.trip-info > .attraction-name {
+    grid-area: attraction-name;
+}
+.trip-info > .attraction-address {
+    grid-area: attraction-address;
+}
+.trip-info > .trip-date {
+    grid-area: date;
+}
+.trip-info > .trip-time {
+    grid-area: time;
+}
+.trip-info > .contact-name {
+    grid-area: contact-name;
+}
+.trip-info > .contact-email {
+    grid-area: contact-email;
+}
+.trip-info > .contact-phone {
+    grid-area: contact-phone;
+}
+.trip-info > .info-msg {
+    grid-area: msg;
+    border-top: 1px solid #E8E8E8;
+    padding-top: 20px;
+}
+
+@media (max-width: 1200px) {
+    .trip-info {
+        grid-template-areas:
+            "attraction-img attraction-name"
+            "attraction-img date"
+            "attraction-img time"
+            "attraction-img attraction-address "
+            "attraction-img contact-name"
+            "attraction-img contact-email"
+            "attraction-img contact-phone"
+            "attraction-img msg";
+        grid-template-columns: 260px 1fr;
+    }
+    .trip-info > .contact-name {
+        border-top: 1px solid #E8E8E8;
+        padding-top: 20px;
+    }
+}
+/* tablets */
+@media (max-width: 768px) {
+    .shopping-bag__container {
+        padding: 45px 20px 40px 20px;
+    }
+    .shopping-bag__success-area > h3 {
+        display: grid; grid-auto-flow: row; gap: 10px;
+    }
+    .trip-info {
+        grid-template-areas:
+            "attraction-img"
+            "attraction-name"
+            "date"
+            "time"
+            "attraction-address "
+            "contact-name"
+            "contact-email"
+            "contact-phone"
+            "msg";
+        grid-template-columns: 1fr;
+    }
 }

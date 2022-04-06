@@ -25,13 +25,37 @@ async function getOrder() {
 // * -------------- *
 const shoppingBagContainer = document.querySelector(".shopping-bag__container");
 const orderNumber = document.querySelector("#order-number");
+const attractionImg = document.querySelector(".attraction-img");
+const attractionName = document.querySelector(".attraction-name");
+const attractionAddress = document.querySelector(".attraction-address");
+const tripDate = document.querySelector(".trip-date");
+const tripTime = document.querySelector(".trip-time");
+const contactName = document.querySelector(".contact-name");
+const contactEmail = document.querySelector(".contact-email");
+const contactPhone = document.querySelector(".contact-phone");
 
 function renderOrder() {
     if(order) {
         shoppingBagContainer.classList.add("shopping-bag--success");
         shoppingBagContainer.classList.remove("shopping-bag--error");
-        // 訂單編號顯示在畫面上
+        // 訂單編號
         orderNumber.textContent = order.number;
+        // 行程資訊
+        attractionImg.src = order.trip.attraction.image;
+        attractionName.textContent = order.trip.attraction.name;
+        attractionAddress.children[0].textContent = order.trip.attraction.address;
+        // 行程日期、時間
+        const date = new Date(order.trip.date);
+        tripDate.children[0].textContent = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDay().toString().padStart(2, '0')}`;
+        if(order.trip.time == "morning") {
+            tripTime.children[0].textContent = "早上 9 點到下午 2 點";
+        } else {
+            tripTime.children[0].textContent = "下午 2 點到晚上 8 點";
+        }
+        // 訂購者聯絡資訊
+        contactName.children[0].textContent = order.contact.name;
+        contactEmail.children[0].textContent = order.contact.email;
+        contactPhone.children[0].textContent = order.contact.phone;
     } else {
         shoppingBagContainer.classList.remove("shopping-bag--success");
         shoppingBagContainer.classList.add("shopping-bag--error");
