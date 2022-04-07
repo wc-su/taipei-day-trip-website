@@ -8,26 +8,28 @@ import { renderUserWrap, resetUserContainer, initCommon, user } from "./common.j
 let attraction = null;
 
 async function getAttraction() {
-    await fetchAPI(`${window.location.pathname}`, "GET")
-    .then(result => {
-        // API 回傳失敗
-        if(result.error) {
-            return;
-        }
-        // 取得景點資訊
-        attraction = result.data;
-    });
+    const result = await fetchAPI(`${window.location.pathname}`, { method: "GET" });
+    // API 回傳失敗
+    if(result.error) {
+        return;
+    }
+    // 取得景點資訊
+    attraction = result.data;
 }
 
-async function addbookingToDB() {
+function addbookingToDB() {
     // 呼叫 api，將預定行程寫入資料庫
-    return await fetchAPI("/booking", "POST",
-        { "content-type": "application/json" },
+    return fetchAPI(
+        "/booking",
         {
-            "attractionId": attraction.id,
-            "date": tourDate.value,
-            "time": tourRadioArea.querySelector("input[type='radio']:checked").value,
-            "price": tourPrice.textContent
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                "attractionId": attraction.id,
+                "date": tourDate.value,
+                "time": tourRadioArea.querySelector("input[type='radio']:checked").value,
+                "price": tourPrice.textContent
+            })
         }
     );
 }
@@ -154,11 +156,16 @@ const tourDate = document.querySelector(".tour__date");
 
 
 async function init() {
+    setLoading(80, 2);
+
     await initCommon();
     await getAttraction();
     // 載入畫面
     renderInit();
     
+    stopLoading();
+    document.querySelector(".main").classList.remove("beforeLoad");
+
     // 若是由 submit(未登入)跳回，直接執行 submit 預定行程
     const localData = localStorage.getItem("data-position");
     localStorage.removeItem("data-position");
@@ -172,10 +179,10 @@ async function init() {
 }
 
 async function addBooking() {
-    const loadingIntervalId = setLoading();
+    setLoading(80, 1);
     const result = await addbookingToDB();
     renderBooking(result);
-    stopLoading(loadingIntervalId);
+    stopLoading();
 }
 
 window.addEventListener("DOMContentLoaded", () => {

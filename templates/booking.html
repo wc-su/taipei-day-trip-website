@@ -19,7 +19,7 @@
             </ul>
         </div>
     </div>
-    <div class="main main--no-booking">
+    <div class="main main--no-booking beforeLoad">
         <div class="tour">
             <p class="tour__title font-weight--blod">您好，<span></span>，待預訂的行程如下：</p>
             <div class="tour__has-booking">
@@ -58,18 +58,18 @@
         </div>
         <div class="credit-card">
             <p class="credit-card__title font-weight--blod">信用卡付款資訊</p>
-            <div>
-                <label for="credit-card__number">卡片號碼：</label>
-                <input type="text" name="" id="credit-card__number" placeholder="**** **** **** ****" inputmode="number">
-            </div>
-            <div>
-                <label for="credit-card__expir">過期時間：</label>
-                <input type="text" name="" id="credit-card__expir" placeholder="MM / YY" inputmode="number">
-            </div>
-            <div>
-                <label for="credit-card__cvv">驗證密碼：</label>
-                <input type="text" name="" id="credit-card__cvv" placeholder="CVV">
-            </div>
+                <div class="card-number-group">
+                    <label for="credit-card__number">卡片號碼：</label>
+                    <div class="tpfield credit-card__number" id="card-number"></div>
+                </div>
+                <div class="expiration-date-group">
+                    <label for="credit-card__expir">過期時間：</label>
+                    <div class="tpfield credit-card__expir" id="card-expiration-date"></div>
+                </div>
+                <div class="cvc-group">
+                    <label for="credit-card__cvc">驗證密碼：</label>
+                    <div class="tpfield credit-card__cvc" id="card-cvc"></div>
+                </div>
         </div>
         <div class="price-check">
             <p class="font-weight--blod">總價：新台幣 <span class="price-check__total"></span> 元</p>
@@ -152,7 +152,9 @@
     <div class="footer">
         <p class="copyright">COPYRIGHT © 2021 台北一日遊</p>
     </div>
+    <script src="https://js.tappaysdk.com/tpdirect/v5.8.0"></script>
     <script type="module" src="/static/js/common.js"></script>
     <script type="module" src="/static/js/booking.js"></script>
+    <script type="module" src="/static/js/tappay.js"></script>
 </body>
 </html>

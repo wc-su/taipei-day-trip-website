@@ -4,6 +4,7 @@
 /* initial css */
 @import "normalize.css";
 @import "reset.css";
+@import "loading.css";
 
 body {
     color: #666666;
@@ -38,6 +39,11 @@ body {
 }
 .menu {
     display: flex;
+    opacity: 0; transform: translateX(100%);
+}
+.menu--visible {
+    opacity: 1; transform: translateX(0);
+    transition: all 0.5s;
 }
 .menu__item {
     padding: 10px;
@@ -238,6 +244,9 @@ body {
 .user__err-message--valid > .user__message-accept {
     height: 14px;
 }
+.user__err-message > span {
+    color: green;
+}
 
 
 .user__verify-item > .user__eye,
@@ -281,16 +290,24 @@ body {
     padding: 44px 0;
 }
 
-.loading-banner {
-    background-color: rgba(68, 136, 153, 0.8);
-    position: fixed; top: 0; left: 0;
-    width: 0%; height: 3px;
-    z-index: 20;
+
+.beforeLoad > * {
+    opacity: 0;
 }
-.loading-banner--stop {
-    width: 100%;
-    transition: width 0.3s;
+.beforeLoad::before {
+    content: "";
+    display: block;
+    position: relative; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px;
+    border: 6px solid #f3f3f3;
+    border-top: 5px solid #448899;
+    border-radius: 50%;
+    z-index: 50;
+    opacity: 1;
+    animation: circle-round 1s linear infinite;
 }
+
 
 @media (max-width: 1200px) {
     .logo > a {

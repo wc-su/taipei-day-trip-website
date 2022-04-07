@@ -1,0 +1,68 @@
+.loading-banner {
+    background-color: rgba(68, 136, 153, 0.8);
+    position: fixed; top: 0; left: 0;
+    height: 3px;
+    opacity: 1;
+    z-index: 20;
+    /* animation */
+    animation-name: loading-slide;
+    animation-duration: 0.5s;
+    animation-direction: reverse;
+    animation-iteration-count: infinite;
+}
+@keyframes loading-slide {
+    from { background-color: rgba(68, 136, 153, 0.8); }
+    to { background-color: rgba(68, 136, 153, 0.5); }
+}
+.loading-banner--stop {
+    /* width 由 js 控制 */
+    opacity: 0;
+    transition: all 0.5s;
+    animation-play-state: paused;
+}
+
+
+.user__loading-wrap {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 30;
+}
+.user__loading-container {
+    position: fixed; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 1);
+    width: 340px; height: 410px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 40px;
+}
+.user__loading-container::before {
+    content: "";
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 10px;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+}
+.user__loading__circle {
+    width: 30px; height: 30px;
+    border: 6px solid #f3f3f3;
+    border-top: 5px solid #448899;
+    border-radius: 50%;
+    animation: circle-round 1s linear infinite;
+}
+.user__loading-wrap--stop {
+    display: none;
+}
+.user__loading-wrap--stop > .loading__circle {
+    animation-play-state: paused;
+}
+@keyframes circle-round {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.user__loading__message {
+    font-size: 18px;
+    font-weight: 700;
+}

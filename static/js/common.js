@@ -1,5 +1,5 @@
 import { regexEmail } from "./config.js";
-import { fetchAPI, setLoading, stopLoading } from "./tool.js";
+import { fetchAPI } from "./tool.js";
 
 // * -------------- *
 // |     model      |
@@ -7,27 +7,40 @@ import { fetchAPI, setLoading, stopLoading } from "./tool.js";
 export let user = null;
 
 async function getUserData() {
-    await fetchAPI("/user", "GET").then((result) => { if(result.data) { user = result.data; }});
+    const result = await fetchAPI("/user", { method: "GET" });
+    if(result.data) {
+        user = result.data;
+    }
 }
-async function userLogout() {
-    return await fetchAPI("/user", "DELETE", { "content-type": "application/json" });
+function userLogout() {
+    return fetchAPI("/user", { method: "DELETE", headers: { "content-type": "application/json" }});
 }
-async function patchUser() {
-    return await fetchAPI("/user", "PATCH",
-        { "content-type": "application/json" },
+function patchUser() {
+    return fetchAPI(
+        "/user",
         {
-            email: loginEmail.value,
-            password: loginPassword.value
-        }, true
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                email: loginEmail.value,
+                password: loginPassword.value
+            })
+        },
+        false,
+        true
     );
 }
-async function postUser() {
-    return await fetchAPI("/user", "POST",
-        { "content-type": "application/json" },
-        {
-            name: signupName.value,
-            email: signupEmail.value,
-            password: signupPassword.value
+function postUser() {
+    return fetchAPI(
+        "/user",
+        { 
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                name: signupName.value,
+                email: signupEmail.value,
+                password: signupPassword.value
+            })
         }
     );
 }
@@ -58,6 +71,7 @@ function renderMenu() {
     } else {
         itemLogin.parentElement.classList.remove("menu__item--inactive");
     }
+    navMenu.classList.add("menu--visible");
 }
 function renderMessage(message, element, errFlag) {
     element.textContent = message;
@@ -235,6 +249,34 @@ function checkData(inputName, inputValue) {
     // 驗證成功
     return "";
 }
+// loading effect
+function setUserLoading(message) {
+    // 視窗（外容器）
+    const loadingWrap = document.createElement("div");
+    loadingWrap.classList.add("user__loading-wrap");
+    // 視窗（內容器）
+    const loadingContainer = document.createElement("div");
+    loadingContainer.classList.add("user__loading-container");
+    // 文字訊息
+    const loadingMessage = document.createElement("p");
+    loadingMessage.classList.add("user__loading__message");
+    loadingMessage.textContent = message;
+    // loading 特效
+    const loadingCircle = document.createElement("div");
+    loadingCircle.classList.add("user__loading__circle");
+    // 加入 內容器
+    loadingContainer.appendChild(loadingMessage);
+    loadingContainer.appendChild(loadingCircle);
+    // 加入 外容器
+    loadingWrap.appendChild(loadingContainer);
+    // 加入 畫面
+    document.body.appendChild(loadingWrap);
+}
+function stopUserLoading() {
+    // 從畫面移除
+    const loadingWrap = document.querySelector(".user__loading-wrap");
+    document.body.removeChild(loadingWrap);
+}
 
 navMenu.addEventListener("click", (e) => {
     if(e.target.nodeName == "A") {
@@ -260,13 +302,13 @@ navMenu.addEventListener("click", (e) => {
                 resetUserContainer("login");
                 break;
             case "logout":
-                const loadingIntervalId = setLoading();
+                setUserLoading("登出中，請稍候");
                 userLogout().then(result => {
-                    stopLoading(loadingIntervalId);
                     if(result["ok"]) {
                         window.location.reload();
                         return;
                     } else {
+                        stopUserLoading();
                         console.log("delete fail");
                     }
                 });
@@ -279,9 +321,8 @@ userLogin.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("login")) {
-            const loadingIntervalId = setLoading();
+            setUserLoading("登入中，請稍候");
             patchUser().then(result => {
-                stopLoading(loadingIntervalId);
                 if(result["ok"]) {
                     if(loginPosition) {
                         if(loginPosition.position == "common") {
@@ -297,6 +338,7 @@ userLogin.addEventListener("click", (e) => {
                     return;
                 } else {
                     renderMessage(result["message"], loginMessage, true);
+                    stopUserLoading();
                 }
             });
         }
@@ -315,11 +357,10 @@ userSignup.addEventListener("click", (e) => {
     if(target.nodeName == "INPUT" && target.type == "submit") {
         e.preventDefault();
         if(isValid("signup")) {
-            const loadingIntervalId = setLoading();
+            setUserLoading("註冊中，請稍候");
             postUser().then(result => {
-                stopLoading(loadingIntervalId);
+                stopUserLoading();
                 if(result["ok"]) {
-                    console.log("this1");
                     renderMessage("註冊成功", signupMessage, false);
                 } else {
                     renderMessage(result["message"], signupMessage, true);

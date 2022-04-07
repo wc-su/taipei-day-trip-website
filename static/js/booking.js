@@ -1,16 +1,28 @@
-import { fetchAPI, setLoading, stopLoading } from "./tool.js"
-import { initCommon, user } from "./common.js"
+import { fetchAPI, setLoading, stopLoading } from "./tool.js";
+import { initCommon, user } from "./common.js";
+import { onSubmit } from "./tappay.js";
 
 // * -------------- *
 // |     model      |
 // * -------------- *
 let bookingInfo = null;
 
-async function deleteBookingInfo() {
-    return await fetchAPI("/booking", "delete").then(result => { return result });
+function deleteBookingInfo() {
+    return fetchAPI("/booking", { method: "DELETE" });
 }
 async function getBookingInfo() {
-    await fetchAPI("/booking", "GET").then(result => bookingInfo = result);
+    bookingInfo = await fetchAPI("/booking", { method: "GET" });
+}
+
+function postOrders(bodyData) {
+    return fetchAPI(
+        "/orders",
+        {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(bodyData)
+        }
+    );
 }
 
 // * -------------- *
@@ -71,8 +83,6 @@ function renderUserLogin() {
 }
 function renderDeleteBooking(result) {
     if(result.ok) {
-        // 資料庫刪除成功，重新載入 booking 畫面
-        window.location.reload();
         return;
     } else {
         const message = document.querySelector(".tour__message");
@@ -88,19 +98,68 @@ function renderDeleteBooking(result) {
 const submitOrder = document.querySelector(".price-check__submit");
 
 async function initBooking() {
+    setLoading(80, 2);
+
     await initCommon();
     renderUserLogin();
     
     await getBookingInfo();
     renderInit();
-}
 
-async function deleteBooking() {
-    const loadingIntervalId = setLoading();
+    stopLoading();
+    main.classList.remove("beforeLoad");
+}
+async function deleteBooking(orderNumber=null) {
+    setLoading(80, 1);
+
     const result = await deleteBookingInfo();
     renderDeleteBooking(result);
-    stopLoading(loadingIntervalId);
+    if(orderNumber) {
+        window.location.assign(`/thankyou?number=${orderNumber}`);
+    } else {
+        // 資料庫刪除成功，重新載入 booking 畫面
+        window.location.reload();
+    }
+    stopLoading();
 }
+async function getOrdersAndPay(getPrimeResult) {
+    if(getPrimeResult.error) {
+        // 顯示錯誤訊息
+        return;
+    }
+
+    let tripInfo = bookingInfo.data;
+    const date = new Date(tripInfo.date);
+    const postOrdersResult = await postOrders({
+        prime: getPrimeResult.prime,
+        order: {
+            price: parseInt(submiTotal.textContent),
+            trip: {
+                attraction: {
+                    id: tripInfo.attraction.id,
+                    name: tripInfo.attraction.name,
+                    address: tripInfo.attraction.address,
+                    image: tripInfo.attraction.image
+                },
+                date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
+                time: tripInfo.time
+            }
+        },
+        contact: {
+            name: connectName.value,
+            email: connectEmail.value,
+            phone: connectPhone.value
+        }
+    });
+    // console.log(postOrdersResult);
+    if(postOrdersResult.error) {
+        // 顯示錯誤訊息
+    } else {
+        // 刪除預定行程
+        deleteBooking(postOrdersResult.data.number);
+    }
+}
+
 
 // event
 window.addEventListener("DOMContentLoaded", () => {
@@ -109,215 +168,7 @@ window.addEventListener("DOMContentLoaded", () => {
 deleteBookingBtn.addEventListener("click", (e) => {
     deleteBooking();
 });
-
-
-
-
-
-
-// 訂單送出 -> 先取消預設事件
+// 訂單送出
 submitOrder.addEventListener("click", (e) => {
-    // 取消預設事件
-    e.preventDefault();
+    onSubmit(e, getOrdersAndPay);
 });
-
-// 信用卡資訊 -> 未完成
-const creditCardNumber = document.querySelector("#credit-card__number");
-const creditCardExpir = document.querySelector("#credit-card__expir");
-const creditCardCVV = document.querySelector("#credit-card__cvv");
-
-creditCardNumber.addEventListener("keydown", () => limitInput(window.event, 16));
-creditCardNumber.addEventListener("keyup", () => formatInput(window.event, 16, " ", 4));
-creditCardNumber.addEventListener("paste", () => {
-    // console.log("paste");
-});
-creditCardExpir.addEventListener("keydown", () => limitInput(window.event, 4));
-creditCardExpir.addEventListener("keyup", () => formatInput(window.event, 4, " / ", 2));
-
-creditCardCVV.addEventListener("keydown", () => limitInput(window.event, 3));
-creditCardCVV.addEventListener("keyup", () => formatInput(window.event, 3, "", 3));
-
-function limitInput(e, length) {
-    switch (e.keyCode) { // allows navigating thru input
-        case 20: // caplocks
-        case 17: // control
-        case 18: // option
-        case 16: // shift
-        case 37: // arrow keys
-        case 38:
-        case 39:
-        case 40:
-        case  9: // tab (let blur handle tab)
-        // case 91: // command
-            console.log("1.keydown: skip1 -> ", e.currentTarget.value, e.keyCode);
-            return;
-        case 46: // delete
-        case  8: // backspace
-            console.log("1.keydown: skip2 -> ", e.currentTarget.value, e.keyCode);
-            return;
-    }
-    if(e.keyCode >= 48 && e.keyCode <= 57) { // number
-    } else {
-        console.log("1.keydown: skip3 -> ", e.currentTarget.value, e.keyCode);
-        e.preventDefault();
-        return;
-    }
-    console.log("1.keydown:", e.currentTarget.value, e.keyCode);
-    // console.log("limitInput", e.keyCode, e);
-    // 將非數字的替換成空白
-    const numbersOnly = e.currentTarget.value.replace(/\D/g, '');
-    if(numbersOnly.length == length) {
-        console.log("  -> this", e.currentTarget.value, e.keyCode);
-        e.preventDefault();
-        return;
-    }
-    console.log("  -> ", numbersOnly.length, length);
-
-    // if (
-    //     [8, 9, 13, 37, 38, 39, 40].includes(e.keyCode) ||
-    //     (e.keyCode >= 48 && e.keyCode <= 58) ||
-    //     (e.keyCode >= 96 && e.keyCode <= 105) ||
-    //     ((e.ctrlKey === true || e.metaKey === true) &&
-    //         (e.keyCode === 65 || e.keyCode === 67 || e.keyCode === 86))
-    // ) {
-    //     /* Allow it */
-    //     const parent = e.currentTarget.parentElement;
-    //     const numbersOnly = e.currentTarget.value.replace(/\D/g, '');
-    //     console.log(parent, numbersOnly);
-    //     showValidationBorder(parent, numbersOnly, length);
-    // } else {
-    //     /* No valid keyCodes */
-    //     e.preventDefault();
-    //     return false;
-    // }
-    // return true;
-}
-function formatInput(e, length, separator, groupSize, onPaste=false) {
-    switch (e.keyCode) { // allows navigating thru input
-        case 20: // caplocks
-        case 17: // control
-        case 18: // option
-        case 16: // shift
-        case 37: // arrow keys
-        case 38:
-        case 39:
-        case 40:
-        case  9: // tab (let blur handle tab)
-        // case 91: // command
-            console.log("2.keyup: skip1 -> ", e.currentTarget.value, e.keyCode);
-            return;
-        case 46: // delete
-        case  8: // backspace
-            console.log("2.keyup: skip2 -> ", e.currentTarget.value, e.keyCode);
-            setTargetValue(e.currentTarget, separator, length, groupSize);
-            return;
-    }
-    if(e.keyCode >= 48 && e.keyCode <= 57) { // number
-    } else {
-        console.log("2.keyup: skip3 -> ", e.currentTarget.value, e.keyCode);
-        // e.preventDefault();
-        return;
-    }
-    console.log("2.keyup:", e.currentTarget.value, e.keyCode);
-    // if(e.currentTarget.value.length > length + separator.length) {
-    //     e.currentTarget.value = e.currentTarget.value.substring(0, length + separator.length);
-    //     console.log("  -> return:", e.currentTarget.value);
-    //     e.preventDefault();
-    //     return;
-    // }
-    // // console.log("formatInput", e.keyCode, e);
-
-    if(e.currentTarget.value.length >= length + separator.length) {
-        console.log("  -> return:", e.currentTarget.value, e.currentTarget.value.length, length, separator.length);
-        setTargetValue(e.currentTarget, separator, length, groupSize);
-        // e.preventDefault();
-        return;
-    }
-    
-    setTargetValue(e.currentTarget, separator, length, groupSize);
-
-    // const e = event;
-    // /* Current input value */
-    // const val = e.currentTarget.value;
-    // let numbersOnly = val.replace(/\D/g, '');
-    // if (e.keyCode === 8) {
-    //     /* If backspace, check credit card type */
-    //     if (length === 16 && numbersOnly.length > 0) {
-    //         c(numbersOnly);
-    //     }
-    // }
-    // const parent = e.currentTarget.parentElement;
-    // /* Allowed: Numbers from keyboard or number pad, or onpaste event */
-    // if ((e.keyCode >= 48 && e.keyCode <= 58) || (e.keyCode >= 96 && e.keyCode <= 105) || onPaste) {
-    //     /* Max formatted length includes separators x3 (with 1 space on each side) */
-    //     const lengthFormatted = length + 3 * (length / groupSize - 1);
-    //     /* Remove non-digits from input */
-    //     if (onPaste) {
-    //         /* Remove non-digits from clipboard data */
-    //         numbersOnly = e.clipboardData.getData('text').replace(/\D/g, '');
-    //     }
-
-    //     /* If there is no separator, length will equal groupSize */
-    //     if (numbersOnly.length > groupSize && length !== groupSize) {
-    //         /* Add hyphens and truncate to max formatted length */
-    //         const re = new RegExp(`(.{${groupSize}})`, 'g');
-    //         const replace = `$1 ${separator} `;
-    //         e.currentTarget.value = numbersOnly.replace(re, replace).substring(0, lengthFormatted);
-    //     } else {
-    //         /* Truncate to max formatted length */
-    //         e.currentTarget.value = numbersOnly.substring(0, lengthFormatted);
-    //     }
-
-    //     /* Check credit card type */
-    //     if (length === 16 && numbersOnly.length > 0) {
-    //         setCardType(numbersOnly);
-    //     }
-
-    //     showValidationBorder(parent, numbersOnly, length);
-
-    //     /* If paste, prevent the event from triggering another paste */
-    //     e.preventDefault();
-    //     return false;
-    // }
-    // return true;
-}
-
-function showValidationBorder(parent, numbersOnly, length) {
-    if (numbersOnly.length === length) {
-        parent.classList.add('has-success');
-        parent.classList.remove('has-error');
-    } else {
-        parent.classList.remove('has-success');
-        parent.classList.add('has-error');
-    }
-}
-
-function setTargetValue(target, separator, length, groupSize) {
-    const numbersOnly = target.value.replace(/\D/g, '');
-
-    let posStart = target.selectionStart;
-    console.log("  -> pos1:", posStart);
-
-    const part = separator.length + groupSize;
-    const remainder = parseInt(posStart % part);
-    if(remainder == 0) {
-        posStart += 1;
-        console.log("  -> pos2:", posStart);
-    } else if (remainder > groupSize) {
-        posStart += (part - remainder + 1);
-        console.log("  -> pos2:", posStart);
-    }
-
-    let i = 0;
-    const unit = length / groupSize;
-    let targetValue = "";
-    while(i < numbersOnly.length && i < length) {
-        if(i > 0 && i % unit == 0) {
-            targetValue += separator;
-        }
-        targetValue += numbersOnly.substring(i, unit + i);
-        i += unit;
-    }
-    target.value = targetValue;
-    target.setSelectionRange(posStart, posStart);
-}
