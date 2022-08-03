@@ -1,4 +1,4 @@
-# taipei-day-trip-website
+# Taipei Day Trip
 Users can look for attractions on the website. While they log in, they can book and order one-day trips they are interested in.
 
 ## Demo
@@ -19,6 +19,15 @@ Users can look for attractions on the website. While they log in, they can book 
 - AWS EC2
 
 ## Features
+### Infinite Scroll
+![我的影片_AdobeExpress](https://user-images.githubusercontent.com/89247843/182599041-c92f4d53-7de6-43c1-afd3-607e542b860e.gif)
+
+### Automatic Slider
+
+### Third-Party Payment System, TapPay
+
+### RWD
+
 
 ## Contect
 - Eric Su
