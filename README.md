@@ -6,3 +6,20 @@ Users can look for attractions on the website. While they log in, they can book 
 - Test account: `demo@test.com` / Password: `123456`
 - Payment Test:  `424242424242`/ `0123`/ `123` 
 
+## Front-end Technique
+- HTML
+- CSS
+- JavaScript
+- AJAX
+- Third-Party Payment System, TapPay SDK
+
+## Backend Technique
+- Python Flask
+- MySQL
+- AWS EC2
+
+## Features
+
+## Contect
+- Eric Su
+- email: theblissout@gmail.com
