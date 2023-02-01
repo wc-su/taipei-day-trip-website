@@ -4,7 +4,7 @@ Users can look for attractions on the website. While they log in, they can book 
 ## Demo
 - [Live Demo](http://34.193.245.158:3000/)
 - Test account: `demo@test.com` / Password: `123456`
-- Payment Test:  `4242424242424242`/ `0123`/ `123` 
+- Payment Test:  `4242424242424242`/ `0124`/ `123` 
 
 ## Front-end Technique
 - HTML
