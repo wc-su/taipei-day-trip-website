@@ -142,7 +142,7 @@ def tappay(prime, amount, card_holder_data):
 	request_data = {
 		"prime": prime,
 		"partner_key": config.env_config["TAPPAY_PARTNERKEY"],
-		"merchant_id": "theblissout_NCCC",
+		"merchant_id": config.env_config["MERCHANT_ID"],
 		"details":"TapPay Test",
 		"amount": amount,
 		"cardholder": {
